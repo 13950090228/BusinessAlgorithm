@@ -336,6 +336,7 @@
 -r:"F:/Unity 2021.3.21f1c1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
+"Assets/Scripts/BaseAction/BaseAction.cs"
 "Assets/Scripts/BaseAction/SearchAction/SearchAction.cs"
 -langversion:9.0
 
