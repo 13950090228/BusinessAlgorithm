@@ -14,14 +14,16 @@ namespace BusinessAlgorithm.Test {
 
         public DrawGraphArgs drawGraphArgs;
 
-        List<DrawGraphBase> drawGraphs = new List<DrawGraphBase>();
-
         public void Clear() {
-            for (int i = 0; i < drawGraphs.Count; i++) {
-                DestroyImmediate(drawGraphs[i].gameObject);
+            // 遍历父节点的所有子节点
+            List<GameObject> goList = new List<GameObject>();
+            foreach (Transform item in this.transform) {
+                goList.Add(item.gameObject);
             }
 
-            drawGraphs.Clear();
+            foreach (GameObject item in goList) {
+                DestroyImmediate(item);
+            }
         }
 
         // 计算起始点与目标点的距离,包含目标点的体积
@@ -51,7 +53,7 @@ namespace BusinessAlgorithm.Test {
             Debug.Log($"[lyq]计算结果:{result}");
         }
 
-        // 判断目标点是否处于指定角度的扇形范围内，包含目标点体积
+        // 判断目标点是否处于指定角度的扇形范围内（包含目标点体积）
         public void CheckInSectorRangeOfDirectionWithBodySize() {
             var result = Range3DAction.CheckInSectorRangeOfDirectionWithBodySize(caster.pos, target.pos, target.radius, drawGraphArgs.radius, drawGraphArgs.angle, drawGraphArgs.direction);
 
@@ -97,7 +99,6 @@ namespace BusinessAlgorithm.Test {
 
         void DrawGraphToArgs(DrawGraphArgs args) {
             DrawGraphBase casterDrawGraph = CreateDrawGraph(args);
-            drawGraphs.Add(casterDrawGraph);
         }
 
         void DrawGraphToActor(Actor actor) {
@@ -107,23 +108,23 @@ namespace BusinessAlgorithm.Test {
             };
 
             DrawGraphBase casterDrawGraph = CreateDrawGraph(args);
-            drawGraphs.Add(casterDrawGraph);
         }
 
         DrawGraphBase CreateDrawGraph(DrawGraphArgs args) {
             DrawGraphBase drawGraph;
+
             switch (args.drawGraphType) {
                 case DrawGraphType.Circle:
-                    drawGraph = GameObject.Instantiate(drawCircle);
+                    drawGraph = GameObject.Instantiate(drawCircle, this.transform);
                     break;
                 case DrawGraphType.Rectangle:
-                    drawGraph = GameObject.Instantiate(drawRectangle);
+                    drawGraph = GameObject.Instantiate(drawRectangle, this.transform);
                     break;
                 case DrawGraphType.Sector:
-                    drawGraph = GameObject.Instantiate(drawSector);
+                    drawGraph = GameObject.Instantiate(drawSector, this.transform);
                     break;
                 default:
-                    drawGraph = GameObject.Instantiate(drawCircle);
+                    drawGraph = GameObject.Instantiate(drawCircle, this.transform);
                     break;
             }
 
