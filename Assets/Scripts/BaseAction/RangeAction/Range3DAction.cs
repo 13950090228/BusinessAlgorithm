@@ -64,6 +64,7 @@ namespace BusinessAlgorithm.BaseAction {
 
             return false;
         }
+        
 
         /// <summary>
         /// 获取指定起始点位置，指定朝向和距离的目标点
@@ -85,12 +86,12 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="targetBodySize">目标体积</param>
         /// <param name="range">扇形范围</param>
         /// <param name="angle">扇形角度</param>
-        /// <param name="dir">扇形中轴线角度（顺时针）</param>
+        /// <param name="direction">扇形方向（顺时针）</param>
         /// <returns></returns>
         public bool CheckInSectorRangeOfDirectionWithBodySize(Vector3 start, Vector3 target, float targetBodySize, float range,
-            float angle, float dir = 0) {
+            float angle, float direction = 0) {
             Vector3 dirBase = target - start;
-            Vector3 forward = Quaternion.Euler(0, dir, 0) * Vector3.forward;
+            Vector3 forward = Quaternion.Euler(0, direction, 0) * Vector3.forward;
             float curAngle = Vector3.Angle(forward, dirBase.normalized);
 
 
@@ -99,8 +100,8 @@ namespace BusinessAlgorithm.BaseAction {
                 if (curAngle <= angle) {
                     return true;
                 } else {
-                    Vector3 pos1 = GetPosByDirAndDis(start, dir - angle, range);
-                    Vector3 pos2 = GetPosByDirAndDis(start, dir + angle, range);
+                    Vector3 pos1 = GetPosByDirAndDis(start, direction - angle, range);
+                    Vector3 pos2 = GetPosByDirAndDis(start, direction + angle, range);
                     return GetStartCenterToTargetDisWithBodySize(pos1, target, targetBodySize) <= 0 || GetStartCenterToTargetDisWithBodySize(pos2, target, targetBodySize) <= 0;
                 }
             }

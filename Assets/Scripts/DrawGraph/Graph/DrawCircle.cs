@@ -6,17 +6,29 @@ namespace BusinessAlgorithm.DrawGraph {
     public class DrawCircle : DrawGraphBase {
         public Vector3 start;    // 圆心
         public float radius;     // 半径
-        public int segments = 50; // 圆形的线段数
+        int segments = 50; // 圆形的线段数
 
-        public override void Draw() {
-            this.transform.position = start;
-
+        public override void InitLineRenderer() {
             int numSegments = Mathf.Max(segments, 3); // 至少需要3个顶点来绘制三角形
             lineRenderer.useWorldSpace = true;
             lineRenderer.startWidth = 0.05f;
             lineRenderer.endWidth = 0.05f;
             lineRenderer.material = material;
             lineRenderer.positionCount = numSegments + 1;
+        }
+
+        public override void InitCircleArgs(Vector3 start, float radius) {
+            this.start = start;
+            this.radius = radius;
+            Draw();
+        }
+
+        public override void Draw() {
+            this.transform.position = start;
+            int numSegments = Mathf.Max(segments, 3); // 至少需要3个顶点来绘制三角形
+
+            InitLineRenderer();
+
             Vector3[] positions = new Vector3[numSegments + 1];
 
             // 计算圆形的每个顶点的位置
@@ -29,10 +41,6 @@ namespace BusinessAlgorithm.DrawGraph {
             }
 
             lineRenderer.SetPositions(positions);
-        }
-
-        public override void Reset() {
-            lineRenderer.positionCount = 0;
         }
     }
 }
