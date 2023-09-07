@@ -45,13 +45,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc1f79374440e084ebcf5e067ae31801, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lineRenderer: {fileID: 3091661779175968168}
+  material: {fileID: 2100000, guid: 10cae27ac09304b47a9d1d72cda5b726, type: 2}
   start: {x: 0, y: 0, z: 0}
   angle: 0
   length: 5
   width: 2
   centerRangType: 1
-  lineRenderer: {fileID: 3091661779175968168}
-  material: {fileID: 2100000, guid: 10cae27ac09304b47a9d1d72cda5b726, type: 2}
 --- !u!120 &3091661779175968168
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -93,12 +93,7 @@ LineRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Positions:
-  - {x: -1, y: 0, z: 0}
-  - {x: 1, y: 0, z: 0}
-  - {x: 1, y: 0, z: 5}
-  - {x: -1, y: 0, z: 5}
-  - {x: -1, y: 0, z: 0}
+  m_Positions: []
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
