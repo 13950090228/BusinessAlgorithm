@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2d0bef5a0b4ef9140a9fe0fdced103f7
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - drawRectangle: {instanceID: 0}
+  - drawCircle: {instanceID: 0}
+  - drawSector: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

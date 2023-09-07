@@ -9,6 +9,7 @@ namespace BusinessAlgorithm.DrawGraph {
         public float width;                         // 矩形的宽度
         public RectCenterRangType centerRangType;   // 矩形中心点
 
+
         public override void InitLineRenderer() {
             lineRenderer.positionCount = 5;
             lineRenderer.useWorldSpace = true;
@@ -17,12 +18,13 @@ namespace BusinessAlgorithm.DrawGraph {
             lineRenderer.material = material;
         }
 
-        public override void InitRectangleAgrs(Vector3 start, float angle, float length, float width, RectCenterRangType centerRangType) {
-            this.start = start;
-            this.angle = angle;
-            this.length = length;
-            this.width = width;
-            this.centerRangType = centerRangType;
+        public override void InitArgs(DrawGraphArgs args) {
+            this.start = args.pos;
+            this.angle = args.angle;
+            this.length = args.length;
+            this.width = args.width;
+            this.centerRangType = args.centerRangType;
+            this.DrawGraphType = args.drawGraphType;
         }
 
         public override void Draw() {

@@ -7,7 +7,7 @@ namespace BusinessAlgorithm.DrawGraph {
         public float radius;                // 扇形的半径
         public float angle;                 // 扇形的夹角
         public float direction;             // 扇形中轴线角度
-        int segments = 50;           // 扇形的线段数
+        int segments = 50;                  // 扇形的线段数
 
         public override void InitLineRenderer() {
             lineRenderer.useWorldSpace = true;
@@ -17,11 +17,12 @@ namespace BusinessAlgorithm.DrawGraph {
             lineRenderer.positionCount = segments + 3;
         }
 
-        public override void InitSectorArgs(Vector3 start, float radius, float angle, float direction) {
-            this.start = start;
-            this.radius = radius;
-            this.angle = angle;
-            this.direction = direction;
+        public override void InitArgs(DrawGraphArgs args) {
+            this.start = args.pos;
+            this.radius = args.radius;
+            this.angle = args.angle;
+            this.direction = args.direction;
+            this.DrawGraphType = args.drawGraphType;
             Draw();
         }
 

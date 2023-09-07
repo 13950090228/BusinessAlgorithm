@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BusinessAlgorithm.BaseAction {
 
-    public class Range3DAction {
+    public static class Range3DAction {
 
         /// <summary>
         /// 计算起始点与目标点的距离,包含目标点的体积
@@ -13,7 +13,7 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="target">目标点</param>
         /// <param name="targetBodySize">目标体积</param>
         /// <returns></returns>
-        public float GetStartCenterToTargetDisWithBodySize(Vector3 start, Vector3 target, float targetBodySize) {
+        public static float GetStartCenterToTargetDisWithBodySize(Vector3 start, Vector3 target, float targetBodySize) {
             float dis = Vector3.Distance(start, target);
             return dis - targetBodySize;
         }
@@ -26,7 +26,7 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="target">目标点</param>
         /// <param name="targetBodySize">目标体积</param>
         /// <returns></returns>
-        public float GetStartToTargetDisWithBodySize(Vector3 start, float startBodySize, Vector3 target, float targetBodySize) {
+        public static float GetStartToTargetDisWithBodySize(Vector3 start, float startBodySize, Vector3 target, float targetBodySize) {
             float dis = Vector3.Distance(start, target);
             return dis - (startBodySize + targetBodySize);
         }
@@ -34,7 +34,7 @@ namespace BusinessAlgorithm.BaseAction {
         /// <summary>
         /// 判断起始点和目标点的距离是否在指定范围内（包含目标体积）
         /// </summary>
-        public bool CheckTargetInRange(Vector3 start, Vector3 target, float targetBodySize, float range) {
+        public static bool CheckTargetInRange(Vector3 start, Vector3 target, float targetBodySize, float range) {
 
             float dis = GetStartCenterToTargetDisWithBodySize(start, target, targetBodySize);
             if (dis <= range) {
@@ -53,7 +53,7 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="angle">扇形角度</param>
         /// <param name="dir">扇形中轴角度（顺时针）</param>
         /// <returns></returns>
-        public bool CheckInSectorRangeOfDirection(Vector3 checkedDir, float checkedDis,
+        public static bool CheckInSectorRangeOfDirection(Vector3 checkedDir, float checkedDis,
            float range, float angle, float dir) {
             Vector3 forward = Quaternion.AngleAxis(dir, Vector3.up) * Vector3.right;
             checkedDir.y = 0;
@@ -64,7 +64,7 @@ namespace BusinessAlgorithm.BaseAction {
 
             return false;
         }
-        
+
 
         /// <summary>
         /// 获取指定起始点位置，指定朝向和距离的目标点
@@ -73,13 +73,13 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="angle">角度</param>
         /// <param name="length">长度</param>
         /// <returns></returns>
-        public Vector3 GetPosByDirAndDis(Vector3 start, float angle, float length) {
+        public static Vector3 GetPosByDirAndDis(Vector3 start, float angle, float length) {
             Vector3 forward = Quaternion.Euler(0, angle, 0) * Vector3.forward;
             return start + forward * length;
         }
 
         /// <summary>
-        /// 判断目标点是否处于指定角度的扇形范围内，包含目标点体积
+        /// 判断目标点是否处于指定角度的扇形范围内（包含目标点体积）
         /// </summary>
         /// <param name="start">起始点</param>
         /// <param name="target">目标点</param>
@@ -88,7 +88,7 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="angle">扇形角度</param>
         /// <param name="direction">扇形方向（顺时针）</param>
         /// <returns></returns>
-        public bool CheckInSectorRangeOfDirectionWithBodySize(Vector3 start, Vector3 target, float targetBodySize, float range,
+        public static bool CheckInSectorRangeOfDirectionWithBodySize(Vector3 start, Vector3 target, float targetBodySize, float range,
             float angle, float direction = 0) {
             Vector3 dirBase = target - start;
             Vector3 forward = Quaternion.Euler(0, direction, 0) * Vector3.forward;
@@ -110,6 +110,37 @@ namespace BusinessAlgorithm.BaseAction {
         }
 
         /// <summary>
+        /// 判断目标点是否处于指定角度的扇形范围内
+        /// </summary>
+        /// <param name="start">起始点</param>
+        /// <param name="target">目标点</param>
+        /// <param name="targetBodySize">目标体积</param>
+        /// <param name="range">扇形范围</param>
+        /// <param name="angle">扇形角度</param>
+        /// <param name="direction">扇形方向（顺时针）</param>
+        /// <returns></returns>
+        public static bool CheckInSectorRangeOfDirection(Vector3 start, Vector3 target, float range,
+            float angle, float direction = 0) {
+            Vector3 dirBase = target - start;
+            Vector3 forward = Quaternion.Euler(0, direction, 0) * Vector3.forward;
+            float curAngle = Vector3.Angle(forward, dirBase.normalized);
+
+
+            float curDis = Vector3.Distance(start, target);
+            if (curDis <= range) {
+                if (curAngle <= angle) {
+                    return true;
+                } else {
+                    Vector3 pos1 = GetPosByDirAndDis(start, direction - angle, range);
+                    Vector3 pos2 = GetPosByDirAndDis(start, direction + angle, range);
+                    return Vector3.Distance(start, target) <= 0 || Vector3.Distance(start, target) <= 0;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// 判断目标点是否在矩形范围内（包含目标体积）
         /// </summary>
         /// <param name="start">起始点</param>
@@ -121,7 +152,7 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="rectRangType">矩形范围类型</param>
         /// <param name="rectCenterRangType">矩形中心类型</param>
         /// <returns></returns>
-        public bool CheckTargetInRectWithBodySize(Vector3 start, Vector3 target, float targetBodySize, float angle, float length, float width, RectRangType rectRangType, RectCenterRangType rectCenterRangType) {
+        public static bool CheckTargetInRectangleWithBodySize(Vector3 start, Vector3 target, float targetBodySize, float angle, float length, float width, RectCenterRangType rectCenterRangType, RectRangType rectRangType = RectRangType.Both) {
             Vector3 forward = Quaternion.Euler(0, angle, 0) * Vector3.forward;
             Vector3 right = Quaternion.Euler(0, angle, 0) * Vector3.right;
             width = width * 0.5f;
@@ -171,7 +202,7 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="rectRangType">矩形范围类型</param>
         /// <param name="rectCenterRangType">矩形中心类型</param>
         /// <returns></returns>
-        public bool CheckTargetInRect(Vector3 start, Vector3 target, float angle, float length, float width, RectRangType rectRangType, RectCenterRangType rectCenterRangType) {
+        public static bool CheckTargetInRectangle(Vector3 start, Vector3 target, float angle, float length, float width, RectCenterRangType rectCenterRangType, RectRangType rectRangType = RectRangType.Both) {
             Vector3 forward = Quaternion.Euler(0, angle, 0) * Vector3.forward;
             Vector3 right = Quaternion.Euler(0, angle, 0) * Vector3.right;
             width = width * 0.5f;

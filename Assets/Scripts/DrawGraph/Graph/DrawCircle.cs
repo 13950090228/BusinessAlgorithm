@@ -17,9 +17,10 @@ namespace BusinessAlgorithm.DrawGraph {
             lineRenderer.positionCount = numSegments + 1;
         }
 
-        public override void InitCircleArgs(Vector3 start, float radius) {
-            this.start = start;
-            this.radius = radius;
+        public override void InitArgs(DrawGraphArgs args) {
+            this.start = args.pos;
+            this.radius = args.radius;
+            this.DrawGraphType = args.drawGraphType;
             Draw();
         }
 

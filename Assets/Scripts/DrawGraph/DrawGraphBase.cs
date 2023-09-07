@@ -1,33 +1,38 @@
 using BusinessAlgorithm.BaseAction;
 using UnityEngine;
-
+using System;
 namespace BusinessAlgorithm.DrawGraph {
+    public enum DrawGraphType {
+        Circle,
+        Sector,
+        Rectangle,
+    }
+    
+    [Serializable]
+    public struct DrawGraphArgs{
+        public DrawGraphType drawGraphType;
+        public Vector3 pos;
+        public float radius;
+        public float angle;
+        public float direction;
+        public float length;
+        public float width;
+        public RectCenterRangType centerRangType;
+    }
+
     [RequireComponent(typeof(LineRenderer))]
     public class DrawGraphBase : MonoBehaviour {
         public LineRenderer lineRenderer;
         public Material material;
+        public DrawGraphType DrawGraphType { get; protected set; }
 
         public virtual void InitLineRenderer() {
         }
 
         /// <summary>
-        /// 初始化扇形参数
+        /// 初始化参数
         /// </summary>
-        public virtual void InitSectorArgs(Vector3 start, float radius, float angle, float direction) {
-
-        }
-
-        /// <summary>
-        /// 初始化圆形参数
-        /// </summary>
-        public virtual void InitCircleArgs(Vector3 start, float radius) {
-
-        }
-
-        /// <summary>
-        /// 初始化矩形参数
-        /// </summary>
-        public virtual void InitRectangleAgrs(Vector3 start, float angle, float length, float width, RectCenterRangType centerRangType) {
+        public virtual void InitArgs(DrawGraphArgs args) {
 
         }
 
