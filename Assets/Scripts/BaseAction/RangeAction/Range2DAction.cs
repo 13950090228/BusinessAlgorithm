@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace BusinessAlgorithm.BaseAction {
-    public class SearchAction {
-        public bool 
+    public class Range2DAction {
+
     }
 }
-

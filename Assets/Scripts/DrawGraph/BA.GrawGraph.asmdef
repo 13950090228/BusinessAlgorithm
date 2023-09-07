@@ -1,0 +1,16 @@
+{
+    "name": "DrawGraph",
+    "rootNamespace": "",
+    "references": [
+        "GUID:fb8e1e2e5c128b840ab3c225d485e984"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

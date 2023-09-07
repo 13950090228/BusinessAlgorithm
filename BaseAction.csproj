@@ -36,9 +36,11 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\BaseAction\SearchAction\SearchAction.cs" />
      <Compile Include="Assets\Scripts\BaseAction\BaseAction.cs" />
-     <None Include="Assets\Scripts\BaseAction\BaseAction.asmdef" />
+     <Compile Include="Assets\Scripts\BaseAction\RangeAction\Range3DAction.cs" />
+     <Compile Include="Assets\Scripts\BaseAction\EnumType\RangeEnumType.cs" />
+     <Compile Include="Assets\Scripts\BaseAction\RangeAction\Range2DAction.cs" />
+     <None Include="Assets\Scripts\BaseAction\BA.BaseAction.asmdef" />
     <Reference Include="UnityEngine">
         <HintPath>F:\Unity 2021.3.21f1c1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>

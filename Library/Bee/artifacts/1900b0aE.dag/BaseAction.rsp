@@ -337,7 +337,9 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
 "Assets/Scripts/BaseAction/BaseAction.cs"
-"Assets/Scripts/BaseAction/SearchAction/SearchAction.cs"
+"Assets/Scripts/BaseAction/EnumType/RangeEnumType.cs"
+"Assets/Scripts/BaseAction/RangeAction/Range2DAction.cs"
+"Assets/Scripts/BaseAction/RangeAction/Range3DAction.cs"
 -langversion:9.0
 
 /deterministic
