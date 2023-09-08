@@ -49,6 +49,24 @@ namespace BusinessAlgorithm.BAEditor {
                 script.CheckInSectorRangeOfDirectionWithBodySize();
             }
 
+            GUILayout.Space(buttonSpacing);
+
+            if (GUILayout.Button("判断目标点是否处于指定角度的扇形范围内", GUILayout.Width(buttonWidth), GUILayout.Height(buttonHeight))) {
+                script.CheckInSectorRangeOfDirection();
+            }
+
+            GUILayout.Space(buttonSpacing);
+
+            if (GUILayout.Button("判断目标点是否在矩形范围内（包含目标体积）", GUILayout.Width(buttonWidth), GUILayout.Height(buttonHeight))) {
+                script.CheckTargetInRectangleWithBodySize();
+            }
+
+            GUILayout.Space(buttonSpacing);
+
+            if (GUILayout.Button("判断目标点是否在矩形范围内", GUILayout.Width(buttonWidth), GUILayout.Height(buttonHeight))) {
+                script.CheckTargetInRectangle();
+            }
+
             GUILayout.EndVertical();
 
         }

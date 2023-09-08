@@ -12,6 +12,6 @@ namespace BusinessAlgorithm.BaseAction {
     // 矩形中心点枚举
     public enum RectCenterRangType {
         Center,    // 矩形正中心
-        bottom,    // 矩形底边
+        Bottom,    // 矩形底边
     }
 }

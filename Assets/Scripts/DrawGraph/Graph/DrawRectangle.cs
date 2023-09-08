@@ -4,7 +4,7 @@ using BusinessAlgorithm.BaseAction;
 namespace BusinessAlgorithm.DrawGraph {
     public class DrawRectangle : DrawGraphBase {
         public Vector3 start;                       // 矩形的起始点
-        public float angle;                         // 矩形的旋转角度
+        public float direction;                         // 矩形的方向
         public float length;                        // 矩形的长度
         public float width;                         // 矩形的宽度
         public RectCenterRangType centerRangType;   // 矩形中心点
@@ -20,7 +20,7 @@ namespace BusinessAlgorithm.DrawGraph {
 
         public override void InitArgs(DrawGraphArgs args) {
             this.start = args.pos;
-            this.angle = args.angle;
+            this.direction = args.direction;
             this.length = args.length;
             this.width = args.width;
             this.centerRangType = args.centerRangType;
@@ -42,7 +42,7 @@ namespace BusinessAlgorithm.DrawGraph {
             // 根据矩形中心点类型调整矩形的位置
             Vector3 centerOffset = Vector3.zero;
 
-            if (centerRangType == RectCenterRangType.bottom) {
+            if (centerRangType == RectCenterRangType.Bottom) {
                 centerOffset = new Vector3(0, 0, length * 0.5f);
             }
 
@@ -55,10 +55,10 @@ namespace BusinessAlgorithm.DrawGraph {
             Vector3 bottomRight = halfBottomRight + centerOffset + start;
 
             // 四个点根据中心点旋转
-            topLeft = RotatePointAroundPivot(topLeft, start, new Vector3(0, angle, 0));
-            topRight = RotatePointAroundPivot(topRight, start, new Vector3(0, angle, 0));
-            bottomLeft = RotatePointAroundPivot(bottomLeft, start, new Vector3(0, angle, 0));
-            bottomRight = RotatePointAroundPivot(bottomRight, start, new Vector3(0, angle, 0));
+            topLeft = RotatePointAroundPivot(topLeft, start, new Vector3(0, direction, 0));
+            topRight = RotatePointAroundPivot(topRight, start, new Vector3(0, direction, 0));
+            bottomLeft = RotatePointAroundPivot(bottomLeft, start, new Vector3(0, direction, 0));
+            bottomRight = RotatePointAroundPivot(bottomRight, start, new Vector3(0, direction, 0));
 
             Vector3[] posArray = new Vector3[5]{
                 topLeft,

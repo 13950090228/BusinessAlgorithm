@@ -160,26 +160,49 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="start">起始点</param>
         /// <param name="target">目标点</param>
         /// <param name="targetBodySize">目标体积</param>
-        /// <param name="angle">角度</param>
+        /// <param name="direction">矩形方向</param>
         /// <param name="length">长</param>
         /// <param name="width">宽</param>
         /// <param name="rectRangType">矩形范围类型</param>
         /// <param name="rectCenterRangType">矩形中心类型</param>
         /// <returns></returns>
-        public static bool CheckTargetInRectangleWithBodySize(Vector3 start, Vector3 target, float targetBodySize, float angle, float length, float width, RectCenterRangType rectCenterRangType, RectRangType rectRangType = RectRangType.Both) {
-            Vector3 forward = Quaternion.Euler(0, angle, 0) * Vector3.forward;
-            Vector3 right = Quaternion.Euler(0, angle, 0) * Vector3.right;
+        public static bool CheckTargetInRectangleWithBodySize(Vector3 start, Vector3 target, float targetBodySize, float direction, float length, float width, RectCenterRangType rectCenterRangType, RectRangType rectRangType = RectRangType.Both) {
+            // 对比对角线和目标点的距离长度
             width = width * 0.5f;
+            float targetToStartDis = GetStartCenterToTargetDisWithBodySize(start, target, targetBodySize);
+            if (targetToStartDis <= 0) {
+                return true;
+            }
+
+            bool isPassMaxDis = false;
+            float diagonalLength;
+            if (rectCenterRangType == RectCenterRangType.Bottom) {
+                diagonalLength = Mathf.Sqrt(length * length + width * width);
+                isPassMaxDis = targetToStartDis > diagonalLength;
+            } else {
+                length = length * 0.5f;
+                diagonalLength = Mathf.Sqrt(length * length + width * width);
+                isPassMaxDis = targetToStartDis > diagonalLength;
+            }
+
+            if (isPassMaxDis) {
+                return false;
+            }
+
+            bool isCanFind = true;
+
+            Vector3 forward = Quaternion.Euler(0, direction, 0) * Vector3.forward;
+            Vector3 right = Quaternion.Euler(0, direction, 0) * Vector3.right;
+
 
             Vector3 dir = target - start;
             float lengthDic = Vector3.Dot(dir, forward);
-            float forwardDistance = Mathf.Abs(lengthDic) - targetBodySize;
-            bool isCanFind = true;
-            if (rectCenterRangType == RectCenterRangType.bottom) {
-                isCanFind = lengthDic > 0;
+
+            if (rectCenterRangType == RectCenterRangType.Bottom) {
+                isCanFind = lengthDic >= 0;
             }
 
-            if (isCanFind && forwardDistance <= length) {
+            if (isCanFind && !isPassMaxDis) {
                 float rightDistance = Vector3.Dot(dir, right);
                 if (0 <= rightDistance) {
                     rightDistance = Mathf.Min(Mathf.Abs(rightDistance),
@@ -210,23 +233,23 @@ namespace BusinessAlgorithm.BaseAction {
         /// </summary>
         /// <param name="start">起始点</param>
         /// <param name="target">目标点</param>
-        /// <param name="angle">角度</param>
+        /// <param name="direction">矩形方向</param>
         /// <param name="length">长</param>
         /// <param name="width">宽</param>
         /// <param name="rectRangType">矩形范围类型</param>
         /// <param name="rectCenterRangType">矩形中心类型</param>
         /// <returns></returns>
-        public static bool CheckTargetInRectangle(Vector3 start, Vector3 target, float angle, float length, float width, RectCenterRangType rectCenterRangType, RectRangType rectRangType = RectRangType.Both) {
-            Vector3 forward = Quaternion.Euler(0, angle, 0) * Vector3.forward;
-            Vector3 right = Quaternion.Euler(0, angle, 0) * Vector3.right;
+        public static bool CheckTargetInRectangle(Vector3 start, Vector3 target, float direction, float length, float width, RectCenterRangType rectCenterRangType, RectRangType rectRangType = RectRangType.Both) {
+            Vector3 forward = Quaternion.Euler(0, direction, 0) * Vector3.forward;
+            Vector3 right = Quaternion.Euler(0, direction, 0) * Vector3.right;
             width = width * 0.5f;
 
             Vector3 dir = target - start;
             float lengthDic = Vector3.Dot(dir, forward);
 
             bool isCanFind = true;
-            if (rectCenterRangType == RectCenterRangType.bottom) {
-                isCanFind = lengthDic > 0;
+            if (rectCenterRangType == RectCenterRangType.Bottom) {
+                isCanFind = lengthDic >= 0;
             }
 
             if (isCanFind && Mathf.Abs(lengthDic) <= length) {
