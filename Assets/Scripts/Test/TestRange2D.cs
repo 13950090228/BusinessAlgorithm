@@ -4,13 +4,13 @@ using UnityEngine;
 using System.Collections.Generic;
 
 namespace BusinessAlgorithm.Test {
-    public class TestRange : MonoBehaviour {
+    public class TestRange2D : MonoBehaviour {
         public DrawRectangle drawRectangle;
         public DrawCircle drawCircle;
         public DrawSector drawSector;
 
-        public Actor caster;
-        public Actor target;
+        public Actor2D caster;
+        public Actor2D target;
 
         public DrawGraphArgs drawGraphArgs;
 
@@ -26,10 +26,13 @@ namespace BusinessAlgorithm.Test {
             }
         }
 
+        public void CustomAction() {
+        }
+
         // 计算起始点与目标点的距离,包含目标点的体积
         public void GetStartCenterToTargetDisWithBodySize() {
             Clear();
-            var result = Range3DAction.GetStartCenterToTargetDisWithBodySize(caster.pos, target.pos, target.radius);
+            var result = Range2DAction.GetStartCenterToTargetDisWithBodySize(caster.pos, target.pos, target.radius);
 
             DrawGraph();
 
@@ -39,7 +42,7 @@ namespace BusinessAlgorithm.Test {
         // 计算起始点与目标点的距离,包含双方的体积
         public void GetStartToTargetDisWithBodySize() {
             Clear();
-            var result = Range3DAction.GetStartToTargetDisWithBodySize(caster.pos, caster.radius, target.pos, target.radius);
+            var result = Range2DAction.GetStartToTargetDisWithBodySize(caster.pos, caster.radius, target.pos, target.radius);
 
             DrawGraph();
 
@@ -49,7 +52,7 @@ namespace BusinessAlgorithm.Test {
         // 判断起始点和目标点的距离是否在指定范围内（包含目标体积）
         public void CheckTargetInRange() {
             Clear();
-            var result = Range3DAction.CheckTargetInRange(caster.pos, target.pos, target.radius, drawGraphArgs.radius);
+            var result = Range2DAction.CheckTargetInRange(caster.pos, target.pos, target.radius, drawGraphArgs.radius);
 
             DrawGraph();
 
@@ -59,7 +62,7 @@ namespace BusinessAlgorithm.Test {
         // 判断目标点是否处于指定角度的扇形范围内（包含目标点体积）
         public void CheckInSectorRangeOfDirectionWithBodySize() {
             Clear();
-            var result = Range3DAction.CheckInSectorRangeOfDirectionWithBodySize(caster.pos, target.pos, target.radius, drawGraphArgs.radius, drawGraphArgs.angle, drawGraphArgs.direction);
+            var result = Range2DAction.CheckInSectorRangeOfDirectionWithBodySize(caster.pos, target.pos, target.radius, drawGraphArgs.radius, drawGraphArgs.angle, drawGraphArgs.direction);
 
             DrawGraph();
 
@@ -69,7 +72,7 @@ namespace BusinessAlgorithm.Test {
         // 判断目标点是否处于指定角度的扇形范围内
         public void CheckInSectorRangeOfDirection() {
             Clear();
-            var result = Range3DAction.CheckInSectorRangeOfDirection(caster.pos, target.pos, drawGraphArgs.radius, drawGraphArgs.angle, drawGraphArgs.direction);
+            var result = Range2DAction.CheckInSectorRangeOfDirection(caster.pos, target.pos, drawGraphArgs.radius, drawGraphArgs.angle, drawGraphArgs.direction);
 
             DrawGraph();
 
@@ -79,7 +82,7 @@ namespace BusinessAlgorithm.Test {
         // 判断目标点是否在矩形范围内（包含目标体积）
         public void CheckTargetInRectangleWithBodySize() {
             Clear();
-            var result = Range3DAction.CheckTargetInRectangleWithBodySize(caster.pos, target.pos, target.radius, drawGraphArgs.direction, drawGraphArgs.length, drawGraphArgs.width, drawGraphArgs.centerRangType);
+            var result = Range2DAction.CheckTargetInRectangleWithBodySize(caster.pos, target.pos, target.radius, drawGraphArgs.direction, drawGraphArgs.length, drawGraphArgs.width, drawGraphArgs.centerRangType);
 
             DrawGraph();
 
@@ -89,7 +92,7 @@ namespace BusinessAlgorithm.Test {
         // 判断目标点是否在矩形范围内
         public void CheckTargetInRectangle() {
             Clear();
-            var result = Range3DAction.CheckTargetInRectangle(caster.pos, target.pos, drawGraphArgs.direction, drawGraphArgs.length, drawGraphArgs.width, drawGraphArgs.centerRangType);
+            var result = Range2DAction.CheckTargetInRectangle(caster.pos, target.pos, drawGraphArgs.direction, drawGraphArgs.length, drawGraphArgs.width, drawGraphArgs.centerRangType);
 
             DrawGraph();
 
@@ -108,9 +111,9 @@ namespace BusinessAlgorithm.Test {
             DrawGraphBase casterDrawGraph = CreateDrawGraph(args);
         }
 
-        void DrawGraphToActor(Actor actor) {
+        void DrawGraphToActor(Actor2D actor) {
             DrawGraphArgs args = new DrawGraphArgs() {
-                pos = actor.pos,
+                pos = new Vector3(actor.pos.x, 0, actor.pos.y),
                 radius = actor.radius,
             };
 

@@ -45,28 +45,6 @@ namespace BusinessAlgorithm.BaseAction {
         }
 
         /// <summary>
-        /// 判断方向是否处于指定角度的扇形范围内
-        /// </summary>
-        /// <param name="checkedDir">被检查的方向</param>
-        /// <param name="checkedDis">被检查的距离</param>
-        /// <param name="range">扇形范围</param>
-        /// <param name="angle">扇形角度</param>
-        /// <param name="dir">扇形中轴角度（顺时针）</param>
-        /// <returns></returns>
-        public static bool CheckInSectorRangeOfDirection(Vector3 checkedDir, float checkedDis,
-           float range, float angle, float dir) {
-            Vector3 forward = Quaternion.AngleAxis(dir, Vector3.up) * Vector3.right;
-            checkedDir.y = 0;
-            float curAngle = Vector3.Angle(forward, checkedDir.normalized);
-            if (checkedDis < range && curAngle <= angle) {
-                return true;
-            }
-
-            return false;
-        }
-
-
-        /// <summary>
         /// 获取指定起始点位置，指定朝向和距离的目标点
         /// </summary>
         /// <param name="start">起始点</param>
