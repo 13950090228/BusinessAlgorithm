@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -123,6 +123,68 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &546860277
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 546860279}
+  - component: {fileID: 546860278}
+  m_Layer: 0
+  m_Name: TestRange2D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &546860278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 546860277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d9ce8d2a033bf648b074cb29021b366, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drawRectangle: {fileID: 3091661779175968166, guid: de6dcc776d4443047893f5dd6025640e, type: 3}
+  drawCircle: {fileID: 2402927441067025781, guid: 59cd2860125ef4e47934c35c86916596, type: 3}
+  drawSector: {fileID: 7128554721883164436, guid: 76f1d986e51e9f642b464d1a3e7b8f55, type: 3}
+  caster:
+    pos: {x: 0, y: 0}
+    radius: 1
+  target:
+    pos: {x: 0, y: 5}
+    radius: 1
+  drawGraphArgs:
+    drawGraphType: 0
+    pos: {x: 0, y: 0, z: 0}
+    radius: 0
+    angle: 0
+    direction: 0
+    length: 0
+    width: 0
+    centerRangType: 0
+--- !u!4 &546860279
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 546860277}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,7 +290,7 @@ GameObject:
   - component: {fileID: 861223517}
   - component: {fileID: 861223516}
   m_Layer: 0
-  m_Name: Main
+  m_Name: TestRange3D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -251,7 +313,7 @@ MonoBehaviour:
   drawSector: {fileID: 7128554721883164436, guid: 76f1d986e51e9f642b464d1a3e7b8f55, type: 3}
   caster:
     pos: {x: 0, y: 0, z: 0}
-    radius: 1
+    radius: 0
   target:
     pos: {x: 0, y: 0, z: 5}
     radius: 1
