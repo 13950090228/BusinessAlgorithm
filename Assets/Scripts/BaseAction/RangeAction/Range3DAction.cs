@@ -79,6 +79,23 @@ namespace BusinessAlgorithm.BaseAction {
         }
 
         /// <summary>
+        /// 获取点A到线段BC的最短距离
+        /// </summary>
+        /// <param name="A"></param>
+        /// <param name="B"></param>
+        /// <param name="C"></param>
+        /// <returns></returns>
+        public static float GetShortestDistanceToLineSegment(Vector3 A, Vector3 B, Vector3 C) {
+            Vector3 BA = A - B;
+            Vector3 BC = C - B;
+            float DotProduct = Vector3.Dot(BA, BC);
+            float BCLengthSquared = BC.sqrMagnitude;
+            float ShortestDistanceSquared = BA.sqrMagnitude - (DotProduct * DotProduct / BCLengthSquared);
+            float ShortestDistance = Mathf.Sqrt(ShortestDistanceSquared);
+            return ShortestDistance;
+        }
+
+        /// <summary>
         /// 判断目标点是否处于指定角度的扇形范围内（包含目标点体积）
         /// </summary>
         /// <param name="start">起始点</param>
@@ -94,15 +111,14 @@ namespace BusinessAlgorithm.BaseAction {
             Vector3 forward = Quaternion.Euler(0, direction, 0) * Vector3.forward;
             float curAngle = Vector3.Angle(forward, dirBase.normalized);
 
-
             float curDis = GetStartCenterToTargetDisWithBodySize(start, target, targetBodySize);
             if (curDis <= range) {
-                if (curAngle <= angle) {
+                if (curAngle <= angle * 0.5f) {
                     return true;
                 } else {
-                    Vector3 pos1 = GetPosByDirAndDis(start, direction - angle, range);
-                    Vector3 pos2 = GetPosByDirAndDis(start, direction + angle, range);
-                    return GetStartCenterToTargetDisWithBodySize(pos1, target, targetBodySize) <= 0 || GetStartCenterToTargetDisWithBodySize(pos2, target, targetBodySize) <= 0;
+                    Vector3 pos1 = GetPosByDirAndDis(start, direction - angle * 0.5f, range);
+                    Vector3 pos2 = GetPosByDirAndDis(start, direction + angle * 0.5f, range);
+                    return GetShortestDistanceToLineSegment(target, start, pos1) <= targetBodySize || GetShortestDistanceToLineSegment(target, start, pos1) <= targetBodySize;
                 }
             }
 
@@ -114,7 +130,6 @@ namespace BusinessAlgorithm.BaseAction {
         /// </summary>
         /// <param name="start">起始点</param>
         /// <param name="target">目标点</param>
-        /// <param name="targetBodySize">目标体积</param>
         /// <param name="range">扇形范围</param>
         /// <param name="angle">扇形角度</param>
         /// <param name="direction">扇形方向（顺时针）</param>
@@ -125,15 +140,14 @@ namespace BusinessAlgorithm.BaseAction {
             Vector3 forward = Quaternion.Euler(0, direction, 0) * Vector3.forward;
             float curAngle = Vector3.Angle(forward, dirBase.normalized);
 
-
             float curDis = Vector3.Distance(start, target);
             if (curDis <= range) {
-                if (curAngle <= angle) {
+                if (curAngle <= angle * 0.5f) {
                     return true;
                 } else {
-                    Vector3 pos1 = GetPosByDirAndDis(start, direction - angle, range);
-                    Vector3 pos2 = GetPosByDirAndDis(start, direction + angle, range);
-                    return Vector3.Distance(start, target) <= 0 || Vector3.Distance(start, target) <= 0;
+                    Vector3 pos1 = GetPosByDirAndDis(start, direction - angle * 0.5f, range);
+                    Vector3 pos2 = GetPosByDirAndDis(start, direction + angle * 0.5f, range);
+                    return GetShortestDistanceToLineSegment(target, start, pos1) <= 0 || GetShortestDistanceToLineSegment(target, start, pos1) <= 0;
                 }
             }
 
