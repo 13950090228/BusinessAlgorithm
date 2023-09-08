@@ -2,14 +2,15 @@ using UnityEngine;
 using UnityEditor;
 using BusinessAlgorithm.DrawGraph;
 using BusinessAlgorithm.Test;
+
 namespace BusinessAlgorithm.BAEditor {
 
-    [CustomEditor(typeof(TestRange), true)]
-    public class TestRangeEditor : Editor {
+    [CustomEditor(typeof(TestRange2D), true)]
+    public class TestRange2DEditor : Editor {
         public override void OnInspectorGUI() {
             base.OnInspectorGUI();
 
-            TestRange script = (TestRange)target;
+            TestRange2D script = (TestRange2D)target;
 
             // 指定按钮的宽度、高度、间隔
             float buttonWidth = 300f;
@@ -18,12 +19,23 @@ namespace BusinessAlgorithm.BAEditor {
 
             GUILayout.Space(30);
 
+            GUILayout.BeginHorizontal();
+
             if (GUILayout.Button("清除", GUILayout.Width(100), GUILayout.Height(40))) {
                 script.Clear();
             }
 
-            // 让元素处于同一行得用 Begin 和 End 包起来
+            GUILayout.Space(30);
+
+            if (GUILayout.Button("自定义方法", GUILayout.Width(100), GUILayout.Height(40))) {
+                script.CustomAction();
+            }
+
+            GUILayout.EndHorizontal();
+
             GUILayout.BeginVertical();
+
+            GUILayout.Space(buttonSpacing);
 
             GUILayout.Space(buttonSpacing);
 
@@ -71,5 +83,4 @@ namespace BusinessAlgorithm.BAEditor {
 
         }
     }
-
 }
