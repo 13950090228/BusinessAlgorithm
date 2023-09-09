@@ -23,10 +23,10 @@ namespace BusinessAlgorithm.DrawGraph {
             this.angle = args.angle;
             this.direction = args.direction;
             this.DrawGraphType = args.drawGraphType;
-            Draw();
+            Draw3D();
         }
 
-        public override void Draw() {
+        public override void Draw3D() {
 
             InitLineRenderer();
 
@@ -39,6 +39,30 @@ namespace BusinessAlgorithm.DrawGraph {
                 float x = start.x + Mathf.Cos(currentAngle * Mathf.Deg2Rad) * radius;
                 float z = start.z + Mathf.Sin(currentAngle * Mathf.Deg2Rad) * radius;
                 Vector3 point = new Vector3(x, start.y, z);
+                lineRenderer.SetPosition(i, point);
+                if (i == 0) {
+                    onePoint = point;
+                }
+            }
+
+            // 添加扇形的中心点作为最后一个顶点，以封闭扇形
+            lineRenderer.SetPosition(segments + 1, start);
+
+            lineRenderer.SetPosition(segments + 2, onePoint);
+        }
+
+        public override void Draw2D() {
+            InitLineRenderer();
+
+            // 根据 direction 调整起始角度
+            float startAngle = -angle / 2.0f - 360 - direction + 90;
+            float step = angle / segments;
+            Vector3 onePoint = Vector3.zero;
+            for (int i = segments; i > 0; i--) {
+                float currentAngle = startAngle + step * i;
+                float x = start.x + Mathf.Cos(currentAngle * Mathf.Deg2Rad) * radius;
+                float y = start.y + Mathf.Sin(currentAngle * Mathf.Deg2Rad) * radius;
+                Vector3 point = new Vector3(x, y, start.z);
                 lineRenderer.SetPosition(i, point);
                 if (i == 0) {
                     onePoint = point;

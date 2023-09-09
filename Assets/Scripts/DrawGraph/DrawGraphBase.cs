@@ -36,7 +36,10 @@ namespace BusinessAlgorithm.DrawGraph {
 
         }
 
-        public virtual void Draw() {
+        public virtual void Draw3D() {
+        }
+
+        public virtual void Draw2D() {
         }
 
         public virtual void Reset() {

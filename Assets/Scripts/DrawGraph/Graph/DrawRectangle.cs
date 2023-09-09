@@ -27,7 +27,7 @@ namespace BusinessAlgorithm.DrawGraph {
             this.DrawGraphType = args.drawGraphType;
         }
 
-        public override void Draw() {
+        public override void Draw3D() {
 
             Reset();
 
@@ -55,10 +55,10 @@ namespace BusinessAlgorithm.DrawGraph {
             Vector3 bottomRight = halfBottomRight + centerOffset + start;
 
             // 四个点根据中心点旋转
-            topLeft = RotatePointAroundPivot(topLeft, start, new Vector3(0, direction, 0));
-            topRight = RotatePointAroundPivot(topRight, start, new Vector3(0, direction, 0));
-            bottomLeft = RotatePointAroundPivot(bottomLeft, start, new Vector3(0, direction, 0));
-            bottomRight = RotatePointAroundPivot(bottomRight, start, new Vector3(0, direction, 0));
+            topLeft = RotatePointAroundPivotY(topLeft, start, direction);
+            topRight = RotatePointAroundPivotY(topRight, start, direction);
+            bottomLeft = RotatePointAroundPivotY(bottomLeft, start, direction);
+            bottomRight = RotatePointAroundPivotY(bottomRight, start, direction);
 
             Vector3[] posArray = new Vector3[5]{
                 topLeft,
@@ -71,9 +71,61 @@ namespace BusinessAlgorithm.DrawGraph {
             lineRenderer.SetPositions(posArray);
         }
 
-        private Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Vector3 angles) {
+        public override void Draw2D() {
+
+            Reset();
+
+            InitLineRenderer();
+
+            // 计算矩形的四个顶点
+            Vector3 halfTopLeft = new Vector3(-width * 0.5f, -length * 0.5f, 0);
+            Vector3 halfTopRight = new Vector3(width * 0.5f, -length * 0.5f, 0);
+            Vector3 halfBottomLeft = new Vector3(-width * 0.5f, length * 0.5f, 0);
+            Vector3 halfBottomRight = new Vector3(width * 0.5f, length * 0.5f, 0);
+
+            // 根据矩形中心点类型调整矩形的位置
+            Vector3 centerOffset = Vector3.zero;
+
+            if (centerRangType == RectCenterRangType.Bottom) {
+                centerOffset = new Vector3(0, length * 0.5f, 0);
+            }
+
+            transform.position = start;
+
+            // 将四个顶点平移
+            Vector3 topLeft = halfTopLeft + centerOffset + start;
+            Vector3 topRight = halfTopRight + centerOffset + start;
+            Vector3 bottomLeft = halfBottomLeft + centerOffset + start;
+            Vector3 bottomRight = halfBottomRight + centerOffset + start;
+
+            // 四个点根据中心点旋转
+            topLeft = RotatePointAroundPivotZ(topLeft, start, direction);
+            topRight = RotatePointAroundPivotZ(topRight, start, direction);
+            bottomLeft = RotatePointAroundPivotZ(bottomLeft, start, direction);
+            bottomRight = RotatePointAroundPivotZ(bottomRight, start, direction);
+
+            Vector3[] posArray = new Vector3[5]{
+                topLeft,
+                topRight,
+                bottomRight,
+                bottomLeft,
+                topLeft
+            };
+
+            lineRenderer.SetPositions(posArray);
+        }
+
+        private Vector3 RotatePointAroundPivotY(Vector3 point, Vector3 pivot, float angle) {
             Vector3 direction = point - pivot;
-            direction = Quaternion.Euler(angles) * direction;
+            Quaternion rotation = Quaternion.Euler(0, angle, 0); // 只在 Z 轴上旋转
+            direction = rotation * direction;
+            return direction + pivot;
+        }
+
+        private Vector3 RotatePointAroundPivotZ(Vector3 point, Vector3 pivot, float angle) {
+            Vector3 direction = point - pivot;
+            Quaternion rotation = Quaternion.Euler(0, 0, angle); // 只在 Z 轴上旋转
+            direction = rotation * direction;
             return direction + pivot;
         }
 

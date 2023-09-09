@@ -21,10 +21,10 @@ namespace BusinessAlgorithm.DrawGraph {
             this.start = args.pos;
             this.radius = args.radius;
             this.DrawGraphType = args.drawGraphType;
-            Draw();
+            Draw3D();
         }
 
-        public override void Draw() {
+        public override void Draw3D() {
             this.transform.position = start;
             int numSegments = Mathf.Max(segments, 3); // 至少需要3个顶点来绘制三角形
 
@@ -38,6 +38,26 @@ namespace BusinessAlgorithm.DrawGraph {
                 float x = start.x + radius * Mathf.Cos(angle);
                 float y = start.y;
                 float z = start.z + radius * Mathf.Sin(angle);
+                positions[i] = new Vector3(x, y, z);
+            }
+
+            lineRenderer.SetPositions(positions);
+        }
+
+        public override void Draw2D() {
+            this.transform.position = start;
+            int numSegments = Mathf.Max(segments, 3); // 至少需要3个顶点来绘制三角形
+
+            InitLineRenderer();
+
+            Vector3[] positions = new Vector3[numSegments + 1];
+
+            // 计算圆形的每个顶点的位置
+            for (int i = 0; i <= numSegments; i++) {
+                float angle = 2f * Mathf.PI * i / numSegments;
+                float x = start.x + radius * Mathf.Cos(angle);
+                float y = start.y + radius * Mathf.Sin(angle);
+                float z = start.z;
                 positions[i] = new Vector3(x, y, z);
             }
 
