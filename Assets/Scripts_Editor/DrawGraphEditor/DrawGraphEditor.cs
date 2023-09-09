@@ -19,7 +19,7 @@ namespace BusinessAlgorithm.BAEditor {
             GUILayout.BeginHorizontal();
 
             if (GUILayout.Button("绘制", GUILayout.Width(buttonWidth), GUILayout.Height(buttonHeight))) {
-                script.Draw();
+                script.Draw3D();
             }
 
             GUILayout.Space(buttonSpacing); // 添加间隔
