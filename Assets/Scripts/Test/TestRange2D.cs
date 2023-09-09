@@ -27,6 +27,11 @@ namespace BusinessAlgorithm.Test {
         }
 
         public void CustomAction() {
+            Clear();
+            var result = Range2DAction.GetPosByDirAndDis(caster.pos, drawGraphArgs.angle, drawGraphArgs.radius);
+            target.pos = result;
+            DrawGraph();
+            Debug.Log($"[lyq]计算结果:{result}");
         }
 
         // 计算起始点与目标点的距离,包含目标点的体积
@@ -113,7 +118,7 @@ namespace BusinessAlgorithm.Test {
 
         void DrawGraphToActor(Actor2D actor) {
             DrawGraphArgs args = new DrawGraphArgs() {
-                pos = new Vector3(actor.pos.x, 0, actor.pos.y),
+                pos = actor.pos,
                 radius = actor.radius,
             };
 
@@ -139,7 +144,7 @@ namespace BusinessAlgorithm.Test {
             }
 
             drawGraph.InitArgs(args);
-            drawGraph.Draw();
+            drawGraph.Draw2D();
             return drawGraph;
         }
     }

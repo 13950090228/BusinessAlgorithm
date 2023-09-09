@@ -139,7 +139,7 @@ namespace BusinessAlgorithm.Test {
             }
 
             drawGraph.InitArgs(args);
-            drawGraph.Draw();
+            drawGraph.Draw3D();
             return drawGraph;
         }
     }

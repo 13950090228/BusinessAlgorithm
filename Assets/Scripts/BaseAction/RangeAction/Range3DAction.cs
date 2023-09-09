@@ -96,7 +96,7 @@ namespace BusinessAlgorithm.BaseAction {
                 } else {
                     Vector3 pos1 = GetPosByDirAndDis(start, direction - angle * 0.5f, range);
                     Vector3 pos2 = GetPosByDirAndDis(start, direction + angle * 0.5f, range);
-                    return GetShortestDistanceToLineSegment(target, start, pos1) <= targetBodySize || GetShortestDistanceToLineSegment(target, start, pos1) <= targetBodySize;
+                    return GetShortestDistanceToLineSegment(target, start, pos1) <= targetBodySize || GetShortestDistanceToLineSegment(target, start, pos2) <= targetBodySize;
                 }
             }
 
@@ -144,43 +144,31 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="rectRangType">矩形范围类型</param>
         /// <param name="rectCenterRangType">矩形中心类型</param>
         /// <returns></returns>
-        public static bool CheckTargetInRectangleWithBodySize(Vector3 start, Vector3 target, float targetBodySize, float direction, float length, float width, RectCenterRangType rectCenterRangType, RectRangType rectRangType = RectRangType.Both) {
-            // 对比对角线和目标点的距离长度
+        public static bool CheckTargetInRectangleWithBodySize(Vector3 start, Vector3 target, float targetBodySize, float direction, float length, float width, RectCenterRangType rectCenterRangType = RectCenterRangType.Center) {
+            start = GetRectangleCenterPoint(start, direction, length, rectCenterRangType);
             width = width * 0.5f;
             float targetToStartDis = GetStartCenterToTargetDisWithBodySize(start, target, targetBodySize);
+            
             if (targetToStartDis <= 0) {
                 return true;
             }
 
             bool isPassMaxDis = false;
             float diagonalLength;
-            if (rectCenterRangType == RectCenterRangType.Bottom) {
-                diagonalLength = Mathf.Sqrt(length * length + width * width);
-                isPassMaxDis = targetToStartDis > diagonalLength;
-            } else {
-                length = length * 0.5f;
-                diagonalLength = Mathf.Sqrt(length * length + width * width);
-                isPassMaxDis = targetToStartDis > diagonalLength;
-            }
+            length = length * 0.5f;
+            diagonalLength = Mathf.Sqrt(length * length + width * width);
+            isPassMaxDis = targetToStartDis > diagonalLength;
 
             if (isPassMaxDis) {
                 return false;
             }
 
-            bool isCanFind = true;
-
             Vector3 forward = Quaternion.Euler(0, direction, 0) * Vector3.forward;
             Vector3 right = Quaternion.Euler(0, direction, 0) * Vector3.right;
-
-
             Vector3 dir = target - start;
             float lengthDic = Vector3.Dot(dir, forward);
 
-            if (rectCenterRangType == RectCenterRangType.Bottom) {
-                isCanFind = lengthDic >= 0;
-            }
-
-            if (isCanFind && !isPassMaxDis) {
+            if (!isPassMaxDis) {
                 float rightDistance = Vector3.Dot(dir, right);
                 if (0 <= rightDistance) {
                     rightDistance = Mathf.Min(Mathf.Abs(rightDistance),
@@ -189,16 +177,8 @@ namespace BusinessAlgorithm.BaseAction {
                     rightDistance = Mathf.Min(Mathf.Abs(rightDistance),
                         Mathf.Abs(rightDistance + targetBodySize));
                 }
-
-                if (rectRangType == RectRangType.Right) {
-                    if (0 <= rightDistance && rightDistance <= width) {
-                        return true;
-                    }
-                } else if (rectRangType == RectRangType.Left) {
-                    if (rightDistance <= 0 && Mathf.Abs(rightDistance) <= width) {
-                        return true;
-                    }
-                } else if (Mathf.Abs(rightDistance) <= width) {
+                Debug.Log($"[lyq]rightDistance:{rightDistance}");
+                if (Mathf.Abs(rightDistance) <= width) {
                     return true;
                 }
             }
@@ -217,7 +197,8 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="rectRangType">矩形范围类型</param>
         /// <param name="rectCenterRangType">矩形中心类型</param>
         /// <returns></returns>
-        public static bool CheckTargetInRectangle(Vector3 start, Vector3 target, float direction, float length, float width, RectCenterRangType rectCenterRangType, RectRangType rectRangType = RectRangType.Both) {
+        public static bool CheckTargetInRectangle(Vector3 start, Vector3 target, float direction, float length, float width, RectCenterRangType rectCenterRangType = RectCenterRangType.Center) {
+            start = GetRectangleCenterPoint(start, direction, length, rectCenterRangType);
             Vector3 forward = Quaternion.Euler(0, direction, 0) * Vector3.forward;
             Vector3 right = Quaternion.Euler(0, direction, 0) * Vector3.right;
             width = width * 0.5f;
@@ -225,28 +206,30 @@ namespace BusinessAlgorithm.BaseAction {
             Vector3 dir = target - start;
             float lengthDic = Vector3.Dot(dir, forward);
 
-            bool isCanFind = true;
-            if (rectCenterRangType == RectCenterRangType.Bottom) {
-                isCanFind = lengthDic >= 0;
-            }
-
-            if (isCanFind && Mathf.Abs(lengthDic) <= length) {
+            if (Mathf.Abs(lengthDic) <= length) {
                 float rightDistance = Vector3.Dot(dir, right);
-
-                if (rectRangType == RectRangType.Right) {
-                    if (0 <= rightDistance && rightDistance <= width) {
-                        return true;
-                    }
-                } else if (rectRangType == RectRangType.Left) {
-                    if (rightDistance <= 0 && Mathf.Abs(rightDistance) <= width) {
-                        return true;
-                    }
-                } else if (Mathf.Abs(rightDistance) <= width) {
+                if (Mathf.Abs(rightDistance) <= width) {
                     return true;
                 }
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// 获取矩形中心点
+        /// </summary>
+        /// <param name="start">起始点</param>
+        /// <param name="direction">朝向角度</param>
+        /// <param name="length">矩形长（与朝向平行的那边）</param>
+        /// <param name="rectCenterRangType">矩形中心点枚举</param>
+        /// <returns></returns>
+        public static Vector3 GetRectangleCenterPoint(Vector3 start, float direction, float length, RectCenterRangType rectCenterRangType) {
+            if (rectCenterRangType == RectCenterRangType.Bottom) {
+                return GetPosByDirAndDis(start, direction, length * 0.5f);
+            }
+
+            return start;
         }
 
     }
