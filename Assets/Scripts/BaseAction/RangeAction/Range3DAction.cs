@@ -177,7 +177,7 @@ namespace BusinessAlgorithm.BaseAction {
                     rightDistance = Mathf.Min(Mathf.Abs(rightDistance),
                         Mathf.Abs(rightDistance + targetBodySize));
                 }
-                Debug.Log($"[lyq]rightDistance:{rightDistance}");
+                
                 if (Mathf.Abs(rightDistance) <= width) {
                     return true;
                 }
