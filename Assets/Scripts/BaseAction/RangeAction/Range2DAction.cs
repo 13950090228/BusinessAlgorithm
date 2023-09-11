@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace BusinessAlgorithm.BaseAction {
-    public class Range2DAction {
+    public static class Range2DAction {
 
         /// <summary>
         /// 计算起始点与目标点的距离,包含目标点的体积
