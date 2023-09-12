@@ -251,7 +251,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41f6a8494c2f73845a36516ada747286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FolderPathA: C:\Users\pc\Desktop\ImageA
+  FolderPathB: C:\Users\pc\Desktop\ImageB
+  SameFolder: C:\Users\pc\Desktop\SameFolde
   similarityThreshold: 0.2
+  pixelDeviation: 5
 --- !u!1 &785789835
 GameObject:
   m_ObjectHideFlags: 0

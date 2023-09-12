@@ -4,18 +4,26 @@ using System.Text;
 using System.IO;
 using System.Collections.Generic;
 
+public struct PixelColorModel {
+    public Color32 color32;
+    public bool isContrast;
+}
+
 public class ImageEntity {
     public string sign;
     public int width;
     public int height;
-    public List<Color32> color32s;
+    public List<PixelColorModel> models;
     public bool isContrast;
 
 }
 
 public class ImageTest : MonoBehaviour {
+    [Header("文件夹A路径")]
     public string FolderPathA = @"C:\Users\pc\Desktop\ImageA";
+    [Header("文件夹B路径")]
     public string FolderPathB = @"C:\Users\pc\Desktop\ImageB";
+    [Header("导出图片的文件夹路径")]
     public string SameFolder = @"C:\Users\pc\Desktop\SameFolde";
 
     List<ImageEntity> AFolder = new List<ImageEntity>();
@@ -23,7 +31,11 @@ public class ImageTest : MonoBehaviour {
 
     List<string> SameList = new List<string>();
 
+    [Header("相似像素点位占比")]
     public float similarityThreshold = 0.2f;
+
+    [Header("像素误差")]
+    public int pixelDeviation = 0;
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
@@ -42,12 +54,15 @@ public class ImageTest : MonoBehaviour {
                 if (AFolder[i].isContrast || BFolder[j].isContrast) {
                     continue;
                 }
-                PixelColorReader(AFolder[i], BFolder[j], similarityThreshold);
+                PixelColorCheck(AFolder[i], BFolder[j], similarityThreshold);
             }
         }
 
         Debug.Log("[lyq]相似图片文件夹创建");
         SameImageFolderCreate(FolderPathA, SameFolder);
+        AFolder.Clear();
+        BFolder.Clear();
+        SameList.Clear();
     }
 
     public void SameImageFolderCreate(string folderPathA, string sameFolder) {
@@ -117,12 +132,15 @@ public class ImageTest : MonoBehaviour {
         entity.sign = sign;
         entity.width = width;
         entity.height = height;
-        entity.color32s = new List<Color32>();
+        entity.models = new List<PixelColorModel>();
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 // 获取像素的颜色
                 Color32 pixelColor = texture2D.GetPixel(x, y);
-                entity.color32s.Add(pixelColor);
+                entity.models.Add(new PixelColorModel() {
+                    color32 = pixelColor,
+                    isContrast = false
+                });
             }
         }
 
@@ -135,31 +153,74 @@ public class ImageTest : MonoBehaviour {
     }
 
     // 两张图片进行像素检测
-    public void PixelColorReader(ImageEntity entityA, ImageEntity entityB, float threshold) {
+    public void PixelColorCheck(ImageEntity entityA, ImageEntity entityB, float threshold) {
         if (entityA.width != entityB.width || entityA.height != entityB.height) {
-            return;
+            // SizeUnlikePixelColorCheck(entityA, entityB, threshold);
+        } else {
+            SizeLikePixelColorCheck(entityA, entityB, threshold);
         }
+    }
 
+    // 尺寸相同的图片检测
+    public void SizeLikePixelColorCheck(ImageEntity entityA, ImageEntity entityB, float threshold) {
         int width = entityA.width;
         int height = entityA.height;
         float count = height * width;
         float sameCount = 0.0f;
 
         // 遍历图像的每个像素
-        for (int i = 0; i < entityA.color32s.Count; i++) {
-            Color32 colorA = entityA.color32s[i];
-            Color32 colorB = entityB.color32s[i];
+        for (int i = 0; i < entityA.models.Count; i++) {
+            Color32 colorA = entityA.models[i].color32;
+            Color32 colorB = entityB.models[i].color32;
 
-            bool rSame = Mathf.Abs(colorA.r - colorB.r) < 5;
-            bool gSame = Mathf.Abs(colorA.g - colorB.g) < 5;
-            bool bSame = Mathf.Abs(colorA.b - colorB.b) < 5;
-            bool aSame = Mathf.Abs(colorA.a - colorB.a) < 5;
+            bool rSame = Mathf.Abs(colorA.r - colorB.r) <= pixelDeviation;
+            bool gSame = Mathf.Abs(colorA.g - colorB.g) <= pixelDeviation;
+            bool bSame = Mathf.Abs(colorA.b - colorB.b) <= pixelDeviation;
+            bool aSame = Mathf.Abs(colorA.a - colorB.a) <= pixelDeviation;
             if (rSame && gSame && bSame && aSame) {
                 sameCount += 1;
             }
         }
 
         if (sameCount / count > similarityThreshold) {
+            Debug.Log($"[lyq]这两张图片相似:{entityA.sign}  ,{entityB.sign}");
+            entityA.isContrast = true;
+            entityB.isContrast = true;
+            SameList.Add(entityA.sign);
+        }
+    }
+
+    public void SizeUnlikePixelColorCheck(ImageEntity entityA, ImageEntity entityB, float threshold) {
+        int width = entityB.width;
+        int height = entityB.height;
+        float count = height * width;
+        float sameCount = 0.0f;
+
+        // 遍历图像的每个像素
+        for (int i = 0; i < entityA.models.Count; i++) {
+            for (int j = 0; j < entityB.models.Count; j++) {
+                Color32 colorA = entityA.models[i].color32;
+                Color32 colorB = entityB.models[j].color32;
+
+                if (entityB.models[j].isContrast) {
+                    continue;
+                }
+
+                bool rSame = Mathf.Abs(colorA.r - colorB.r) <= pixelDeviation;
+                bool gSame = Mathf.Abs(colorA.g - colorB.g) <= pixelDeviation;
+                bool bSame = Mathf.Abs(colorA.b - colorB.b) <= pixelDeviation;
+                bool aSame = Mathf.Abs(colorA.a - colorB.a) <= pixelDeviation;
+                if (rSame && gSame && bSame && aSame) {
+                    sameCount += 1;
+                    entityB.models[j] = new PixelColorModel(){
+                        color32 = colorB,
+                        isContrast = true
+                    };
+                }
+            }
+        }
+
+        if (sameCount / count > 0.8f) {
             Debug.Log($"[lyq]这两张图片相似:{entityA.sign}  ,{entityB.sign}");
             entityA.isContrast = true;
             entityB.isContrast = true;
