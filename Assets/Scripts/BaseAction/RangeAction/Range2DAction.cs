@@ -33,10 +33,10 @@ namespace BusinessAlgorithm.BaseAction {
         /// <summary>
         /// 判断起始点和目标点的距离是否在指定范围内（包含目标体积）
         /// </summary>
-        public static bool CheckTargetInRange(Vector2 start, Vector2 target, float targetBodySize, float range) {
+        public static bool CheckTargetInRangeWithBodySize(Vector2 start, Vector2 target, float targetBodySize, float radius) {
 
             float dis = GetStartCenterToTargetDisWithBodySize(start, target, targetBodySize);
-            if (dis <= range) {
+            if (dis <= radius) {
                 return true;
             }
 
@@ -71,23 +71,6 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="B"></param>
         /// <param name="C"></param>
         /// <returns></returns>
-        public static float GetShortestDistanceToLineSegment(Vector3 A, Vector3 B, Vector3 C) {
-            Vector3 BA = A - B;
-            Vector3 BC = C - B;
-            float DotProduct = Vector3.Dot(BA, BC);
-            float BCLengthSquared = BC.sqrMagnitude;
-            float ShortestDistanceSquared = BA.sqrMagnitude - (DotProduct * DotProduct / BCLengthSquared);
-            float ShortestDistance = Mathf.Sqrt(ShortestDistanceSquared);
-            return ShortestDistance;
-        }
-
-        /// <summary>
-        /// 获取点A到线段BC的最短距离
-        /// </summary>
-        /// <param name="A"></param>
-        /// <param name="B"></param>
-        /// <param name="C"></param>
-        /// <returns></returns>
         public static float GetShortestDistanceToLineSegment(Vector2 A, Vector2 B, Vector2 C) {
             Vector2 BA = A - B;
             Vector2 BC = C - B;
@@ -104,23 +87,23 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="start">起始点</param>
         /// <param name="target">目标点</param>
         /// <param name="targetBodySize">目标体积</param>
-        /// <param name="range">扇形范围</param>
+        /// <param name="radius">扇形半径</param>
         /// <param name="angle">扇形角度</param>
         /// <param name="direction">扇形方向（顺时针）</param>
         /// <returns></returns>
-        public static bool CheckInSectorRangeOfDirectionWithBodySize(Vector2 start, Vector2 target, float targetBodySize, float range,
+        public static bool CheckInSectorRangeOfDirectionWithBodySize(Vector2 start, Vector2 target, float targetBodySize, float radius,
             float angle, float direction = 0) {
             Vector2 dirBase = target - start;
             Vector2 forward = Quaternion.Euler(0, 0, direction) * Vector2.up;
             float curAngle = Vector2.Angle(forward, dirBase.normalized);
 
             float curDis = GetStartCenterToTargetDisWithBodySize(start, target, targetBodySize);
-            if (curDis <= range) {
+            if (curDis <= radius) {
                 if (curAngle <= angle * 0.5f) {
                     return true;
                 } else {
-                    Vector2 pos1 = GetPosByDirAndDis(start, direction - angle * 0.5f, range);
-                    Vector2 pos2 = GetPosByDirAndDis(start, direction + angle * 0.5f, range);
+                    Vector2 pos1 = GetPosByDirAndDis(start, direction - angle * 0.5f, radius);
+                    Vector2 pos2 = GetPosByDirAndDis(start, direction + angle * 0.5f, radius);
                     return GetShortestDistanceToLineSegment(target, start, pos1) <= targetBodySize || GetShortestDistanceToLineSegment(target, start, pos2) <= targetBodySize;
                 }
             }
@@ -132,23 +115,23 @@ namespace BusinessAlgorithm.BaseAction {
         /// </summary>
         /// <param name="start">起始点</param>
         /// <param name="target">目标点</param>
-        /// <param name="range">扇形范围</param>
+        /// <param name="radius">扇形半径</param>
         /// <param name="angle">扇形角度</param>
         /// <param name="direction">扇形方向（顺时针）</param>
         /// <returns></returns>
-        public static bool CheckInSectorRangeOfDirection(Vector2 start, Vector2 target, float range,
+        public static bool CheckInSectorRangeOfDirection(Vector2 start, Vector2 target, float radius,
             float angle, float direction = 0) {
             Vector2 dirBase = target - start;
             Vector2 forward = Quaternion.Euler(0, 0, direction) * Vector2.up;
             float curAngle = Vector2.Angle(forward, dirBase.normalized);
 
             float curDis = Vector2.Distance(start, target);
-            if (curDis <= range) {
+            if (curDis <= radius) {
                 if (curAngle <= angle * 0.5f) {
                     return true;
                 } else {
-                    Vector2 pos1 = GetPosByDirAndDis(start, direction - angle * 0.5f, range);
-                    Vector2 pos2 = GetPosByDirAndDis(start, direction + angle * 0.5f, range);
+                    Vector2 pos1 = GetPosByDirAndDis(start, direction - angle * 0.5f, radius);
+                    Vector2 pos2 = GetPosByDirAndDis(start, direction + angle * 0.5f, radius);
                     return GetShortestDistanceToLineSegment(target, start, pos1) <= 0 || GetShortestDistanceToLineSegment(target, start, pos2) <= 0;
                 }
             }

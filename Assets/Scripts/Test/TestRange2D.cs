@@ -57,7 +57,7 @@ namespace BusinessAlgorithm.Test {
         // 判断起始点和目标点的距离是否在指定范围内（包含目标体积）
         public void CheckTargetInRange() {
             Clear();
-            var result = Range2DAction.CheckTargetInRange(caster.pos, target.pos, target.radius, drawGraphArgs.radius);
+            var result = Range2DAction.CheckTargetInRangeWithBodySize(caster.pos, target.pos, target.radius, drawGraphArgs.radius);
 
             DrawGraph();
 
