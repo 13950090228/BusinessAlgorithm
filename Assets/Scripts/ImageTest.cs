@@ -4,7 +4,15 @@ using System.Text;
 using System.IO;
 using System.Collections.Generic;
 
-public struct PixelColorModel {
+public enum RunningStageType {
+    None,
+    FolderImageLoad,          // 图片收集阶段
+    CollectCalculations,      // 收集计算阶段
+    SameImageFolderCreate,    // 相似图片文件夹创建阶段
+    DataClear,                // 数据清理阶段
+}
+
+public class PixelColorModel {
     public Color32 color32;
     public bool isContrast;
 }
@@ -15,16 +23,15 @@ public class ImageEntity {
     public int height;
     public List<PixelColorModel> models;
     public bool isContrast;
-
 }
 
 public class ImageTest : MonoBehaviour {
     [Header("文件夹A路径")]
-    public string FolderPathA = @"C:\Users\pc\Desktop\ImageA";
+    public string FolderPathA;
     [Header("文件夹B路径")]
-    public string FolderPathB = @"C:\Users\pc\Desktop\ImageB";
+    public string FolderPathB;
     [Header("导出图片的文件夹路径")]
-    public string SameFolder = @"C:\Users\pc\Desktop\SameFolde";
+    public string SameFolder;
 
     List<ImageEntity> AFolder = new List<ImageEntity>();
     List<ImageEntity> BFolder = new List<ImageEntity>();
@@ -35,46 +42,88 @@ public class ImageTest : MonoBehaviour {
     public float similarityThreshold = 0.2f;
 
     [Header("像素误差")]
-    public int pixelDeviation = 0;
+    public int pixelDeviation = 5;
+
+    [Header("是否收集")]
+    public bool isRunning = false;
+
+    RunningStageType runningStage = RunningStageType.FolderImageLoad;
+    // 遍历的最大数量
+    int amount;
+    int AIndex = 0;
+    int BIndex = 0;
+    int curCount;
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            GameStart();
+
+        if (isRunning) {
+
+            if (runningStage == RunningStageType.FolderImageLoad) {
+                FolderImageLoadStage();
+            } else if (runningStage == RunningStageType.CollectCalculations) {
+                CollectCalculations();
+            } else if (runningStage == RunningStageType.SameImageFolderCreate) {
+                SameImageFolderCreate();
+            } else if (runningStage == RunningStageType.DataClear) {
+                DataClear();
+            } else {
+
+            }
+
         }
+
     }
 
-    public void GameStart() {
-        Debug.Log("[lyq]开始收集文件夹图片资源");
+    // 图片收集阶段
+    public void FolderImageLoadStage() {
         AFolder = FolderImageLoad(FolderPathA);
         BFolder = FolderImageLoad(FolderPathB);
-
-        Debug.Log("[lyq]开始计算是否有相似图片");
-        for (int i = 0; i < AFolder.Count; i++) {
-            for (int j = 0; j < BFolder.Count; j++) {
-                if (AFolder[i].isContrast || BFolder[j].isContrast) {
-                    continue;
-                }
-                PixelColorCheck(AFolder[i], BFolder[j], similarityThreshold);
-            }
-        }
-
-        Debug.Log("[lyq]相似图片文件夹创建");
-        SameImageFolderCreate(FolderPathA, SameFolder);
-        AFolder.Clear();
-        BFolder.Clear();
-        SameList.Clear();
+        amount = AFolder.Count * BFolder.Count;
+        runningStage = RunningStageType.CollectCalculations;
+        Debug.Log($"[lyq]开始收集文件夹图片资源,总数:{amount}");
     }
 
-    public void SameImageFolderCreate(string folderPathA, string sameFolder) {
+    // 收集计算阶段
+    public void CollectCalculations() {
+        Debug.Log("[lyq]开始计算是否有相似图片");
+
+        ImageEntity entityA = AFolder[AIndex];
+        ImageEntity entityB = BFolder[BIndex];
+
+        if (AFolder[AIndex].isContrast || BFolder[BIndex].isContrast) {
+
+        } else {
+            PixelColorCheck(AFolder[AIndex], BFolder[BIndex], similarityThreshold);
+        }
+
+        BIndex += 1;
+
+        if (BIndex >= BFolder.Count) {
+            BIndex = 0;
+            AIndex += 1;
+        }
+
+        if (AIndex >= AFolder.Count) {
+            runningStage = RunningStageType.SameImageFolderCreate;
+        }
+
+        curCount += 1;
+        Debug.LogWarning($"[lyq]当前收集进度：{curCount} / {amount}");
+        return;
+    }
+
+    // 相似图片文件夹创建阶段
+    public void SameImageFolderCreate() {
+        Debug.Log("[lyq]相似图片文件夹创建");
         // 检查源文件夹是否存在
-        if (Directory.Exists(folderPathA)) {
+        if (Directory.Exists(FolderPathA)) {
             // 如果目标文件夹不存在，则创建它
-            if (!Directory.Exists(sameFolder)) {
-                Directory.CreateDirectory(sameFolder);
+            if (!Directory.Exists(SameFolder)) {
+                Directory.CreateDirectory(SameFolder);
             }
 
             // 获取源文件夹中的所有文件
-            string[] files = Directory.GetFiles(folderPathA);
+            string[] files = Directory.GetFiles(FolderPathA);
 
             // 遍历源文件夹中的文件
             foreach (string filePath in files) {
@@ -83,7 +132,7 @@ public class ImageTest : MonoBehaviour {
                 for (int i = 0; i < SameList.Count; i++) {
                     if (SameList[i] == fileName) {
                         // 构建目标文件的完整路径
-                        string destinationPath = Path.Combine(sameFolder, fileName);
+                        string destinationPath = Path.Combine(SameFolder, fileName);
                         // 复制文件到目标文件夹
                         File.Copy(filePath, destinationPath, true); // 设置为true以允许覆盖同名文件
                         Debug.Log($"[lyq]图片：{fileName}已复制");
@@ -93,6 +142,16 @@ public class ImageTest : MonoBehaviour {
 
             Debug.Log("[lyq]相似图片文件夹创建成功");
         }
+
+        runningStage = RunningStageType.DataClear;
+    }
+
+    // 数据清理阶段
+    public void DataClear() {
+        AFolder.Clear();
+        BFolder.Clear();
+        SameList.Clear();
+        runningStage = RunningStageType.None;
     }
 
     // 文件夹下图片收集
@@ -155,7 +214,7 @@ public class ImageTest : MonoBehaviour {
     // 两张图片进行像素检测
     public void PixelColorCheck(ImageEntity entityA, ImageEntity entityB, float threshold) {
         if (entityA.width != entityB.width || entityA.height != entityB.height) {
-            // SizeUnlikePixelColorCheck(entityA, entityB, threshold);
+            SizeUnlikePixelColorCheck(entityA, entityB, threshold);
         } else {
             SizeLikePixelColorCheck(entityA, entityB, threshold);
         }
@@ -191,31 +250,31 @@ public class ImageTest : MonoBehaviour {
     }
 
     public void SizeUnlikePixelColorCheck(ImageEntity entityA, ImageEntity entityB, float threshold) {
+
         int width = entityB.width;
         int height = entityB.height;
-        float count = height * width;
+        float count = entityB.models.Count / 2;
         float sameCount = 0.0f;
-
+        // 只读取图片中间部分
+        int Aend = entityA.models.Count / 4 * 3;
+        int Bend = entityB.models.Count / 4 * 3;
         // 遍历图像的每个像素
-        for (int i = 0; i < entityA.models.Count; i++) {
-            for (int j = 0; j < entityB.models.Count; j++) {
-                Color32 colorA = entityA.models[i].color32;
-                Color32 colorB = entityB.models[j].color32;
+        for (int i = entityA.models.Count / 4; i < Aend; i++) {
+            for (int j = entityB.models.Count / 4; j < Bend; j++) {
+                PixelColorModel modelA = entityA.models[i];
+                PixelColorModel modelB = entityB.models[j];
 
-                if (entityB.models[j].isContrast) {
+                if (modelA.isContrast || modelB.isContrast) {
                     continue;
                 }
 
-                bool rSame = Mathf.Abs(colorA.r - colorB.r) <= pixelDeviation;
-                bool gSame = Mathf.Abs(colorA.g - colorB.g) <= pixelDeviation;
-                bool bSame = Mathf.Abs(colorA.b - colorB.b) <= pixelDeviation;
-                bool aSame = Mathf.Abs(colorA.a - colorB.a) <= pixelDeviation;
+                bool rSame = Mathf.Abs(modelA.color32.r - modelB.color32.r) <= pixelDeviation;
+                bool gSame = Mathf.Abs(modelA.color32.g - modelB.color32.g) <= pixelDeviation;
+                bool bSame = Mathf.Abs(modelA.color32.b - modelB.color32.b) <= pixelDeviation;
+                bool aSame = Mathf.Abs(modelA.color32.a - modelB.color32.a) <= pixelDeviation;
                 if (rSame && gSame && bSame && aSame) {
                     sameCount += 1;
-                    entityB.models[j] = new PixelColorModel(){
-                        color32 = colorB,
-                        isContrast = true
-                    };
+                    modelB.isContrast = true;
                 }
             }
         }
@@ -226,6 +285,7 @@ public class ImageTest : MonoBehaviour {
             entityB.isContrast = true;
             SameList.Add(entityA.sign);
         }
+
     }
 
     private Texture2D LoadTexture(string imagePath) {

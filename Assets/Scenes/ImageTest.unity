@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -251,11 +251,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41f6a8494c2f73845a36516ada747286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FolderPathA: C:\Users\pc\Desktop\ImageA
-  FolderPathB: C:\Users\pc\Desktop\ImageB
-  SameFolder: C:\Users\pc\Desktop\SameFolde
-  similarityThreshold: 0.2
+  FolderPathA: d:\Users\PC3070\Desktop\ImageA
+  FolderPathB: d:\Users\PC3070\Desktop\ImageB
+  SameFolder: d:\Users\PC3070\Desktop\SameImage
+  similarityThreshold: 0.1
   pixelDeviation: 5
+  isRunning: 0
 --- !u!1 &785789835
 GameObject:
   m_ObjectHideFlags: 0
