@@ -240,5 +240,26 @@ namespace BusinessAlgorithm.BaseAction {
             return start;
         }
 
+        /// <summary>
+        /// 让点以某一点为圆心旋转指定角度
+        /// </summary>
+        /// <param name="point">旋转点</param>
+        /// <param name="center">中心点</param>
+        /// <param name="angle">角度</param>
+        /// <returns></returns>
+        public static Vector2 RotatePointAroundCenter(Vector2 point, Vector2 center, float angle) {
+            // 将角度转换为弧度
+            float radians = angle * Mathf.Deg2Rad;
+
+            // 计算旋转后的点坐标
+            float cos = Mathf.Cos(radians);
+            float sin = Mathf.Sin(radians);
+
+            float x = cos * (point.x - center.x) - sin * (point.y - center.y) + center.x;
+            float y = sin * (point.x - center.x) + cos * (point.y - center.y) + center.y;
+
+            return new Vector2(x, y);
+        }
+
     }
 }
