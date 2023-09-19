@@ -91,15 +91,13 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="angle">扇形角度</param>
         /// <param name="direction">扇形方向（顺时针）</param>
         /// <returns></returns>
-        public static bool CheckInSectorRangeOfDirectionWithBodySize(Vector2 start, Vector2 target, float targetBodySize, float radius,
-            float angle, float direction = 0) {
+        public static bool CheckInSectorRangeOfDirectionWithBodySize(Vector2 start, Vector2 target, float targetBodySize, float radius, float angle, float direction) {
             Vector2 dirBase = target - start;
             Vector2 forward = Quaternion.Euler(0, 0, direction) * Vector2.up;
-            float curAngle = Vector2.Angle(forward, dirBase.normalized);
-
+            float relativeAngle = CalculateClockwiseAngle(start, target);
             float curDis = GetStartCenterToTargetDisWithBodySize(start, target, targetBodySize);
             if (curDis <= radius) {
-                if (curAngle <= angle * 0.5f) {
+                if (relativeAngle <= direction + angle * 0.5f && relativeAngle >= direction - angle * 0.5f) {
                     return true;
                 } else {
                     Vector2 pos1 = GetPosByDirAndDis(start, direction - angle * 0.5f, radius);
@@ -120,14 +118,13 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="direction">扇形方向（顺时针）</param>
         /// <returns></returns>
         public static bool CheckInSectorRangeOfDirection(Vector2 start, Vector2 target, float radius,
-            float angle, float direction = 0) {
+            float angle, float direction) {
             Vector2 dirBase = target - start;
             Vector2 forward = Quaternion.Euler(0, 0, direction) * Vector2.up;
-            float curAngle = Vector2.Angle(forward, dirBase.normalized);
-
+            float relativeAngle = CalculateClockwiseAngle(start, target);
             float curDis = Vector2.Distance(start, target);
             if (curDis <= radius) {
-                if (curAngle <= angle * 0.5f) {
+                if (relativeAngle <= direction + angle * 0.5f && relativeAngle >= direction - angle * 0.5f) {
                     return true;
                 } else {
                     Vector2 pos1 = GetPosByDirAndDis(start, direction - angle * 0.5f, radius);
@@ -241,7 +238,7 @@ namespace BusinessAlgorithm.BaseAction {
         }
 
         /// <summary>
-        /// 让点以某一点为圆心旋转指定角度
+        /// 让点以某一点为圆心旋转指定角度(顺时针)
         /// </summary>
         /// <param name="point">旋转点</param>
         /// <param name="center">中心点</param>
@@ -259,6 +256,30 @@ namespace BusinessAlgorithm.BaseAction {
             float y = sin * (point.x - center.x) + cos * (point.y - center.y) + center.y;
 
             return new Vector2(x, y);
+        }
+
+        /// <summary>
+        /// 计算点B在点A的哪个角度（顺时针）
+        /// </summary>
+        /// <param name="A"></param>
+        /// <param name="B"></param>
+        /// <returns></returns>
+        public static float CalculateClockwiseAngle(Vector2 A, Vector2 B) {
+            // 计算从向量A到向量B的差向量
+            Vector2 difference = B - A;
+
+            // 使用Mathf.Atan2来计算逆时针方向的角度（弧度）
+            float angleRadians = Mathf.Atan2(difference.x, difference.y);
+
+            // 将弧度转化为角度（顺时针方向）
+            float angleDegrees = angleRadians * Mathf.Rad2Deg;
+
+            // 如果你希望角度在0到360之间，可以进行调整
+            if (angleDegrees < 0) {
+                angleDegrees += 360f;
+            }
+
+            return angleDegrees;
         }
 
     }

@@ -117,14 +117,14 @@ namespace BusinessAlgorithm.DrawGraph {
 
         private Vector3 RotatePointAroundPivotY(Vector3 point, Vector3 pivot, float angle) {
             Vector3 direction = point - pivot;
-            Quaternion rotation = Quaternion.Euler(0, angle, 0); // 只在 Z 轴上旋转
+            Quaternion rotation = Quaternion.Euler(0, angle, 0); 
             direction = rotation * direction;
             return direction + pivot;
         }
 
         private Vector3 RotatePointAroundPivotZ(Vector3 point, Vector3 pivot, float angle) {
             Vector3 direction = point - pivot;
-            Quaternion rotation = Quaternion.Euler(0, 0, -angle); // 只在 Z 轴上旋转
+            Quaternion rotation = Quaternion.Euler(0, 0, -angle); 
             direction = rotation * direction;
             return direction + pivot;
         }
