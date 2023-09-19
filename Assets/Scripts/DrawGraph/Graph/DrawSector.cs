@@ -66,7 +66,6 @@ namespace BusinessAlgorithm.DrawGraph {
                 if (i == 0) {
                     onePoint = point;
                 }
-                Debug.Log($"[lyq]i:{i},pos:{point}");
             }
 
             // 添加扇形的中心点作为最后一个顶点，以封闭扇形
