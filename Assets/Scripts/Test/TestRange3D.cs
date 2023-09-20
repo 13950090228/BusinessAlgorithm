@@ -32,7 +32,7 @@ namespace BusinessAlgorithm.Test {
         // 计算起始点与目标点的距离,包含目标点的体积
         public void GetStartCenterToTargetDisWithBodySize() {
             Clear();
-            var result = Range3DAction.GetStartCenterToTargetDisWithBodySize(caster.pos, target.pos, target.radius);
+            var result = Range3DAction.GetStartCenterToTargetDisWithBodySize(drawGraphArgs.pos, target.pos, target.radius);
 
             DrawGraph();
 
@@ -42,7 +42,7 @@ namespace BusinessAlgorithm.Test {
         // 计算起始点与目标点的距离,包含双方的体积
         public void GetStartToTargetDisWithBodySize() {
             Clear();
-            var result = Range3DAction.GetStartToTargetDisWithBodySize(caster.pos, caster.radius, target.pos, target.radius);
+            var result = Range3DAction.GetStartToTargetDisWithBodySize(drawGraphArgs.pos, caster.radius, target.pos, target.radius);
 
             DrawGraph();
 
@@ -52,7 +52,7 @@ namespace BusinessAlgorithm.Test {
         // 判断起始点和目标点的距离是否在指定范围内（包含目标体积）
         public void CheckTargetInRange() {
             Clear();
-            var result = Range3DAction.CheckTargetInRangeWithBodySize(caster.pos, target.pos, target.radius, drawGraphArgs.radius);
+            var result = Range3DAction.CheckTargetInRangeWithBodySize(drawGraphArgs.pos, target.pos, target.radius, drawGraphArgs.radius);
 
             DrawGraph();
 
@@ -62,7 +62,7 @@ namespace BusinessAlgorithm.Test {
         // 判断目标点是否处于指定角度的扇形范围内（包含目标点体积）
         public void CheckInSectorRangeOfDirectionWithBodySize() {
             Clear();
-            var result = Range3DAction.CheckInSectorRangeOfDirectionWithBodySize(caster.pos, target.pos, target.radius, drawGraphArgs.radius, drawGraphArgs.angle, drawGraphArgs.direction);
+            var result = Range3DAction.CheckInSectorRangeOfDirectionWithBodySize(drawGraphArgs.pos, target.pos, target.radius, drawGraphArgs.radius, drawGraphArgs.angle, drawGraphArgs.direction);
 
             DrawGraph();
 
@@ -72,7 +72,7 @@ namespace BusinessAlgorithm.Test {
         // 判断目标点是否处于指定角度的扇形范围内
         public void CheckInSectorRangeOfDirection() {
             Clear();
-            var result = Range3DAction.CheckInSectorRangeOfDirection(caster.pos, target.pos, drawGraphArgs.radius, drawGraphArgs.angle, drawGraphArgs.direction);
+            var result = Range3DAction.CheckInSectorRangeOfDirection(drawGraphArgs.pos, target.pos, drawGraphArgs.radius, drawGraphArgs.angle, drawGraphArgs.direction);
 
             DrawGraph();
 
@@ -82,7 +82,7 @@ namespace BusinessAlgorithm.Test {
         // 判断目标点是否在矩形范围内（包含目标体积）
         public void CheckTargetInRectangleWithBodySize() {
             Clear();
-            var result = Range3DAction.CheckTargetInRectangleWithBodySize(caster.pos, target.pos, target.radius, drawGraphArgs.direction, drawGraphArgs.length, drawGraphArgs.width, drawGraphArgs.centerRangType);
+            var result = Range3DAction.CheckTargetInRectangleWithBodySize(drawGraphArgs.pos, target.pos, target.radius, drawGraphArgs.direction, drawGraphArgs.length, drawGraphArgs.width, drawGraphArgs.centerRangType);
 
             DrawGraph();
 
@@ -92,7 +92,7 @@ namespace BusinessAlgorithm.Test {
         // 判断目标点是否在矩形范围内
         public void CheckTargetInRectangle() {
             Clear();
-            var result = Range3DAction.CheckTargetInRectangle(caster.pos, target.pos, drawGraphArgs.direction, drawGraphArgs.length, drawGraphArgs.width, drawGraphArgs.centerRangType);
+            var result = Range3DAction.CheckTargetInRectangle(drawGraphArgs.pos, target.pos, drawGraphArgs.direction, drawGraphArgs.length, drawGraphArgs.width, drawGraphArgs.centerRangType);
 
             DrawGraph();
 
