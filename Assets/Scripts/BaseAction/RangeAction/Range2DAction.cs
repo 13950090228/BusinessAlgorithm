@@ -10,11 +10,11 @@ namespace BusinessAlgorithm.BaseAction {
         /// </summary>
         /// <param name="start">起始点</param>
         /// <param name="target">目标点</param>
-        /// <param name="targetBodySize">目标体积</param>
+        /// <param name="targetSizeRadius">目标体积</param>
         /// <returns></returns>
-        public static float GetStartCenterToTargetDisWithBodySize(Vector2 start, Vector2 target, float targetBodySize) {
+        public static float GetStartCenterToTargetDisWithBodySize(Vector2 start, Vector2 target, float targetSizeRadius) {
             float dis = Vector2.Distance(start, target);
-            return dis - targetBodySize;
+            return dis - targetSizeRadius;
         }
 
         /// <summary>
@@ -23,19 +23,19 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="start">起始点</param>
         /// <param name="startBodySize">起始点体积</param>
         /// <param name="target">目标点</param>
-        /// <param name="targetBodySize">目标体积</param>
+        /// <param name="targetSizeRadius">目标体积</param>
         /// <returns></returns>
-        public static float GetStartToTargetDisWithBodySize(Vector2 start, float startBodySize, Vector2 target, float targetBodySize) {
+        public static float GetStartToTargetDisWithBodySize(Vector2 start, float startBodySize, Vector2 target, float targetSizeRadius) {
             float dis = Vector2.Distance(start, target);
-            return dis - (startBodySize + targetBodySize);
+            return dis - (startBodySize + targetSizeRadius);
         }
 
         /// <summary>
         /// 判断起始点和目标点的距离是否在指定范围内（包含目标体积）
         /// </summary>
-        public static bool CheckTargetInRangeWithBodySize(Vector2 start, Vector2 target, float targetBodySize, float radius) {
+        public static bool CheckTargetInRangeWithBodySize(Vector2 start, Vector2 target, float targetSizeRadius, float radius) {
 
-            float dis = GetStartCenterToTargetDisWithBodySize(start, target, targetBodySize);
+            float dis = GetStartCenterToTargetDisWithBodySize(start, target, targetSizeRadius);
             if (dis <= radius) {
                 return true;
             }
@@ -86,25 +86,38 @@ namespace BusinessAlgorithm.BaseAction {
         /// </summary>
         /// <param name="start">起始点</param>
         /// <param name="target">目标点</param>
-        /// <param name="targetBodySize">目标体积</param>
+        /// <param name="targetSizeRadius">目标体积</param>
         /// <param name="radius">扇形半径</param>
         /// <param name="angle">扇形角度</param>
         /// <param name="direction">扇形方向（顺时针）</param>
         /// <returns></returns>
-        public static bool CheckInSectorRangeOfDirectionWithBodySize(Vector2 start, Vector2 target, float targetBodySize, float radius, float angle, float direction) {
+        public static bool CheckInSectorRangeOfDirectionWithBodySize(Vector2 start, Vector2 target, float targetSizeRadius, float radius, float angle, float direction) {
             Vector2 dirBase = target - start;
             Vector2 forward = Quaternion.Euler(0, 0, direction) * Vector2.up;
-            float relativeAngle = CalculateClockwiseAngle(start, target);
-            float curDis = GetStartCenterToTargetDisWithBodySize(start, target, targetBodySize);
+            float curDis = GetStartCenterToTargetDisWithBodySize(start, target, targetSizeRadius);
+            // Debug.Log($"[lyq]1");
+            bool includedAngle = false; ;
             if (curDis <= radius) {
-                if (relativeAngle <= direction + angle * 0.5f && relativeAngle >= direction - angle * 0.5f) {
+                float relativeAngle = CalculateClockwiseAngle(start, target);
+                includedAngle = relativeAngle <= direction + angle * 0.5f && relativeAngle >= direction - angle * 0.5f;
+                // Debug.Log($"[lyq]2相对角度:{relativeAngle}，夹角1：{direction + angle * 0.5f}，夹角2：{direction - angle * 0.5f}");
+                if (includedAngle) {
                     return true;
                 } else {
+                    // Debug.Log($"[lyq]3");
+                    // 计算目标中心点到扇形两条边的垂线
                     Vector2 pos1 = GetPosByDirAndDis(start, direction - angle * 0.5f, radius);
                     Vector2 pos2 = GetPosByDirAndDis(start, direction + angle * 0.5f, radius);
-                    return GetShortestDistanceToLineSegment(target, start, pos1) <= targetBodySize || GetShortestDistanceToLineSegment(target, start, pos2) <= targetBodySize;
+                    float vertical1 = GetShortestDistanceToLineSegment(target, start, pos1);
+                    float vertical2 = GetShortestDistanceToLineSegment(target, start, pos2);
+                    // 计算垂线的距离是否小于目标半径和扇形半径的合，小于就证明相交
+                    bool condition1 = vertical1 <= targetSizeRadius + radius || vertical2 <= targetSizeRadius + radius;
+                    Debug.Log($"[lyq]vertical1:{vertical1},vertical2:{vertical2}");
+                    bool condition2 = targetSizeRadius >= vertical1 || targetSizeRadius >= vertical2;
+                    return condition1 && condition2;
                 }
             }
+            // Debug.Log($"[lyq]4");
             return false;
         }
 
@@ -117,8 +130,7 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="angle">扇形角度</param>
         /// <param name="direction">扇形方向（顺时针）</param>
         /// <returns></returns>
-        public static bool CheckInSectorRangeOfDirection(Vector2 start, Vector2 target, float radius,
-            float angle, float direction) {
+        public static bool CheckInSectorRangeOfDirection(Vector2 start, Vector2 target, float radius, float angle, float direction) {
             Vector2 dirBase = target - start;
             Vector2 forward = Quaternion.Euler(0, 0, direction) * Vector2.up;
             float relativeAngle = CalculateClockwiseAngle(start, target);
@@ -129,7 +141,9 @@ namespace BusinessAlgorithm.BaseAction {
                 } else {
                     Vector2 pos1 = GetPosByDirAndDis(start, direction - angle * 0.5f, radius);
                     Vector2 pos2 = GetPosByDirAndDis(start, direction + angle * 0.5f, radius);
-                    return GetShortestDistanceToLineSegment(target, start, pos1) <= 0 || GetShortestDistanceToLineSegment(target, start, pos2) <= 0;
+                    float vertical1 = GetShortestDistanceToLineSegment(target, start, pos1);
+                    float vertical2 = GetShortestDistanceToLineSegment(target, start, pos2);
+                    return vertical1 <= 0 || vertical2 <= 0;
                 }
             }
             return false;
@@ -140,7 +154,7 @@ namespace BusinessAlgorithm.BaseAction {
         /// </summary>
         /// <param name="start">起始点</param>
         /// <param name="target">目标点</param>
-        /// <param name="targetBodySize">目标体积</param>
+        /// <param name="targetSizeRadius">目标体积</param>
         /// <param name="direction">矩形方向</param>
         /// <param name="length">长</param>
         /// <param name="width">宽</param>
@@ -148,12 +162,12 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="rectCenterRangType">矩形中心类型</param>
         /// <returns></returns>
         // 判断目标点是否在矩形范围内（包含目标体积）
-        public static bool CheckTargetInRectangleWithBodySize(Vector2 start, Vector2 target, float targetBodySize, float direction, float length, float width, RectCenterRangType rectCenterRangType = RectCenterRangType.Center) {
+        public static bool CheckTargetInRectangleWithBodySize(Vector2 start, Vector2 target, float targetSizeRadius, float direction, float length, float width, RectCenterRangType rectCenterRangType = RectCenterRangType.Center) {
             start = GetRectangleCenterPoint(start, direction, length, rectCenterRangType);
 
             // 对比对角线和目标点的距离长度
             width = width * 0.5f;
-            float targetToStartDis = GetStartCenterToTargetDisWithBodySize(start, target, targetBodySize);
+            float targetToStartDis = GetStartCenterToTargetDisWithBodySize(start, target, targetSizeRadius);
             if (targetToStartDis <= 0) {
                 return true;
             }
@@ -178,10 +192,10 @@ namespace BusinessAlgorithm.BaseAction {
                 float rightDistance = Vector2.Dot(dir, right);
                 if (0 <= rightDistance) {
                     rightDistance = Mathf.Min(Mathf.Abs(rightDistance),
-                        Mathf.Abs(rightDistance - targetBodySize));
+                        Mathf.Abs(rightDistance - targetSizeRadius));
                 } else {
                     rightDistance = Mathf.Min(Mathf.Abs(rightDistance),
-                        Mathf.Abs(rightDistance + targetBodySize));
+                        Mathf.Abs(rightDistance + targetSizeRadius));
                 }
                 if (Mathf.Abs(rightDistance) <= width) {
                     return true;
