@@ -95,29 +95,22 @@ namespace BusinessAlgorithm.BaseAction {
             Vector2 dirBase = target - start;
             Vector2 forward = Quaternion.Euler(0, 0, direction) * Vector2.up;
             float curDis = GetStartCenterToTargetDisWithBodySize(start, target, targetSizeRadius);
-            // Debug.Log($"[lyq]1");
             bool includedAngle = false; ;
             if (curDis <= radius) {
                 float relativeAngle = CalculateClockwiseAngle(start, target);
-                includedAngle = relativeAngle <= direction + angle * 0.5f && relativeAngle >= direction - angle * 0.5f;
-                // Debug.Log($"[lyq]2相对角度:{relativeAngle}，夹角1：{direction + angle * 0.5f}，夹角2：{direction - angle * 0.5f}");
+                includedAngle = IsAngleBetween(relativeAngle, direction - angle * 0.5f, direction + angle * 0.5f);
                 if (includedAngle) {
                     return true;
                 } else {
-                    // Debug.Log($"[lyq]3");
-                    // 计算目标中心点到扇形两条边的垂线
+                    // 求出扇形的两个点
                     Vector2 pos1 = GetPosByDirAndDis(start, direction - angle * 0.5f, radius);
                     Vector2 pos2 = GetPosByDirAndDis(start, direction + angle * 0.5f, radius);
-                    float vertical1 = GetShortestDistanceToLineSegment(target, start, pos1);
-                    float vertical2 = GetShortestDistanceToLineSegment(target, start, pos2);
-                    // 计算垂线的距离是否小于目标半径和扇形半径的合，小于就证明相交
-                    bool condition1 = vertical1 <= targetSizeRadius + radius || vertical2 <= targetSizeRadius + radius;
-                    Debug.Log($"[lyq]vertical1:{vertical1},vertical2:{vertical2}");
-                    bool condition2 = targetSizeRadius >= vertical1 || targetSizeRadius >= vertical2;
-                    return condition1 && condition2;
+                    // 求出圆形是否与扇形的两条边相交
+                    bool condition1 = IsCircleIntersectingLine(target, targetSizeRadius, pos1, start);
+                    bool condition2 = IsCircleIntersectingLine(target, targetSizeRadius, pos2, start);
+                    return condition1 || condition2;
                 }
             }
-            // Debug.Log($"[lyq]4");
             return false;
         }
 
@@ -296,5 +289,65 @@ namespace BusinessAlgorithm.BaseAction {
             return angleDegrees;
         }
 
+        /// <summary>
+        /// 判断一个圆与一条线段是否相交
+        /// </summary>
+        /// <param name="circlePos">圆心</param>
+        /// <param name="radius">半径</param>
+        /// <param name="lineStart">线段起始点</param>
+        /// <param name="lineEnd">线段终点</param>
+        /// <returns></returns>
+        public static bool IsCircleIntersectingLine(Vector2 circlePos, float radius, Vector2 lineStart, Vector2 lineEnd) {
+            // 计算线段的向量
+            Vector2 lineVector = lineEnd - lineStart;
+
+            // 计算线段的长度的平方
+            float lineLengthSquared = lineVector.sqrMagnitude;
+
+            // 计算从圆心到线段起点的向量
+            Vector2 circleToLineStart = lineStart - circlePos;
+
+            // 计算圆心到线段的最短距离
+            float closestDistance = Vector2.Dot(circleToLineStart, lineVector) / lineLengthSquared;
+
+            // 计算最短距离上的点
+            Vector2 closestPoint = lineStart + closestDistance * lineVector;
+
+            // 计算圆心到最短距离点的距离的平方
+            float distanceToClosestPointSquared = (circlePos - closestPoint).sqrMagnitude;
+
+            // 如果圆心到最短距离点的距离小于圆的半径的平方，相交
+            return distanceToClosestPointSquared < (radius * radius);
+        }
+
+        /// <summary>
+        /// 判断一个角度是否处于两个角度之间
+        /// </summary>
+        /// <param name="targetAngle">目标角度</param>
+        /// <param name="startAngle">起始角度</param>
+        /// <param name="endAngle">结束角度</param>
+        /// <returns></returns>
+        public static bool IsAngleBetween(float targetAngle, float startAngle, float endAngle) {
+            // 将所有角度限制在0到360度之间
+            if (targetAngle < 0) {
+                targetAngle += 360;
+            }
+
+            if (startAngle < 0 || endAngle < 0) {
+                startAngle += 360;
+                endAngle += 360;
+            }
+            Debug.Log($"测试:targetAngle{targetAngle},startAngle:{startAngle},endAngle:{endAngle}");
+            if (startAngle < endAngle) {
+                // 如果起始角度小于结束角度，则检查角度是否在两者之间
+                return targetAngle >= startAngle && targetAngle <= endAngle;
+            } else if (startAngle > endAngle) {
+                // 如果起始角度大于结束角度，则检查角度是否在两者之外
+                return targetAngle >= startAngle || targetAngle <= endAngle;
+            } else {
+                // 如果起始角度等于结束角度，则角度范围无效
+                return false;
+            }
+        }
     }
 }
