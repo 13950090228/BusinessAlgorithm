@@ -328,7 +328,7 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="endAngle">结束角度</param>
         /// <returns></returns>
         public static bool IsAngleBetween(float targetAngle, float startAngle, float endAngle) {
-            // 将所有角度限制在0到360度之间
+            // 将所有角度全部大于0
             if (targetAngle < 0) {
                 targetAngle += 360;
             }
@@ -337,15 +337,12 @@ namespace BusinessAlgorithm.BaseAction {
                 startAngle += 360;
                 endAngle += 360;
             }
-            Debug.Log($"测试:targetAngle{targetAngle},startAngle:{startAngle},endAngle:{endAngle}");
+
             if (startAngle < endAngle) {
-                // 如果起始角度小于结束角度，则检查角度是否在两者之间
                 return targetAngle >= startAngle && targetAngle <= endAngle;
             } else if (startAngle > endAngle) {
-                // 如果起始角度大于结束角度，则检查角度是否在两者之外
                 return targetAngle >= startAngle || targetAngle <= endAngle;
             } else {
-                // 如果起始角度等于结束角度，则角度范围无效
                 return false;
             }
         }
