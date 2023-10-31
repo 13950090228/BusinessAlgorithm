@@ -1,15 +1,15 @@
-namespace MortiseFrame.Swing.Generic {
+namespace BusinessAlgorithm.Easing {
     public enum EasingType {
-        Linear = 0,
-        Sine = 1,
-        Quad = 2,
-        Cubic = 3,
-        Quart = 4,
-        Quint = 5,
-        Expo = 6,
-        Circ = 7,
-        Back = 8,
-        Elastic = 9,
-        Bounce = 10,
+        Linear = 0,   // 线性
+        Sine = 1,     // 正弦
+        Quad = 2,     // 二次方
+        Cubic = 3,    // 三次方
+        Quart = 4,    // 四次方
+        Quint = 5,    // 四次方
+        Expo = 6,     // 指数
+        Circ = 7,     // 圆形
+        Back = 8,     // 回退
+        Elastic = 9,  // 弹性
+        Bounce = 10,  // 弹跳
     }
 }

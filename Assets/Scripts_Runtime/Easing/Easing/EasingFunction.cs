@@ -1,4 +1,3 @@
-using MortiseFrame.Swing.Generic;
 using UnityEngine;
 
 namespace BusinessAlgorithm.Easing {

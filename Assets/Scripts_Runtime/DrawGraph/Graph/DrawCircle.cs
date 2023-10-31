@@ -6,7 +6,7 @@ namespace BusinessAlgorithm.DrawGraph {
     public class DrawCircle : DrawGraphBase {
         public Vector3 start;    // 圆心
         public float radius;     // 半径
-        int segments = 50; // 圆形的线段数
+        int segments = 50;       // 圆形的线段数
 
         public override void InitLineRenderer() {
             int numSegments = Mathf.Max(segments, 3); // 至少需要3个顶点来绘制三角形
