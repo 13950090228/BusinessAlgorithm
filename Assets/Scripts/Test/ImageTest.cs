@@ -25,6 +25,9 @@ public class ImageEntity {
     public bool isContrast;
 }
 
+/// <summary>
+/// 写着玩的，判断两张图片是否由一张图片改动而来
+/// </summary>
 public class ImageTest : MonoBehaviour {
     [Header("文件夹A路径")]
     public string FolderPathA;

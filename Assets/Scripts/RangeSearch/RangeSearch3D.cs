@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BusinessAlgorithm.BaseAction {
+namespace BusinessAlgorithm.RangeSearch {
 
-    public static class Range3DAction {
+    public static class RangeSearch3D {
 
         /// <summary>
         /// 计算起始点与目标点的距离,包含目标点的体积

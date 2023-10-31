@@ -1,5 +1,5 @@
 using UnityEngine;
-using BusinessAlgorithm.BaseAction;
+using BusinessAlgorithm.RangeSearch;
 
 namespace BusinessAlgorithm.DrawGraph {
     public class DrawSector : DrawGraphBase {
