@@ -281,7 +281,6 @@ namespace BusinessAlgorithm.BaseAction {
             // 将弧度转化为角度（顺时针方向）
             float angleDegrees = angleRadians * Mathf.Rad2Deg;
 
-            // 如果你希望角度在0到360之间，可以进行调整
             if (angleDegrees < 0) {
                 angleDegrees += 360f;
             }
@@ -328,7 +327,7 @@ namespace BusinessAlgorithm.BaseAction {
         /// <param name="endAngle">结束角度</param>
         /// <returns></returns>
         public static bool IsAngleBetween(float targetAngle, float startAngle, float endAngle) {
-            // 将所有角度全部大于0
+            // 将所有角度限制在0到360度之间
             if (targetAngle < 0) {
                 targetAngle += 360;
             }
@@ -339,10 +338,13 @@ namespace BusinessAlgorithm.BaseAction {
             }
 
             if (startAngle < endAngle) {
+                // 如果起始角度小于结束角度，则检查角度是否在两者之间
                 return targetAngle >= startAngle && targetAngle <= endAngle;
             } else if (startAngle > endAngle) {
+                // 如果起始角度大于结束角度，则检查角度是否在两者之外
                 return targetAngle >= startAngle || targetAngle <= endAngle;
             } else {
+                // 如果起始角度等于结束角度，则角度范围无效
                 return false;
             }
         }
