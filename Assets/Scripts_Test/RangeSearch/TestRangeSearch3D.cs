@@ -1,16 +1,16 @@
-using BusinessAlgorithm.RangeSearch;
+﻿using BusinessAlgorithm.RangeSearch;
 using BusinessAlgorithm.DrawGraph;
 using UnityEngine;
 using System.Collections.Generic;
 
 namespace BusinessAlgorithm.Test {
-    public class TestRange2D : MonoBehaviour {
+    public class TestRangeSearch3D : MonoBehaviour {
         public DrawRectangle drawRectangle;
         public DrawCircle drawCircle;
         public DrawSector drawSector;
 
-        public Actor2D caster;
-        public Actor2D target;
+        public Actor caster;
+        public Actor target;
 
         public DrawGraphArgs drawGraphArgs;
 
@@ -27,17 +27,12 @@ namespace BusinessAlgorithm.Test {
         }
 
         public void CustomAction() {
-            Clear();
-            var result = RangeSearch2D.GetPosByDirAndDis(drawGraphArgs.pos, drawGraphArgs.angle, drawGraphArgs.radius);
-            target.pos = result;
-            DrawGraph();
-            Debug.Log($"[lyq]计算结果:{result}");
         }
 
         // 计算起始点与目标点的距离,包含目标点的体积
         public void GetStartCenterToTargetDisWithBodySize() {
             Clear();
-            var result = RangeSearch2D.GetStartCenterToTargetDisWithBodySize(drawGraphArgs.pos, target.pos, target.radius);
+            var result = RangeSearch3D.GetStartCenterToTargetDisWithBodySize(drawGraphArgs.pos, target.pos, target.radius);
 
             DrawGraph();
 
@@ -47,7 +42,7 @@ namespace BusinessAlgorithm.Test {
         // 计算起始点与目标点的距离,包含双方的体积
         public void GetStartToTargetDisWithBodySize() {
             Clear();
-            var result = RangeSearch2D.GetStartToTargetDisWithBodySize(drawGraphArgs.pos, caster.radius, target.pos, target.radius);
+            var result = RangeSearch3D.GetStartToTargetDisWithBodySize(drawGraphArgs.pos, caster.radius, target.pos, target.radius);
 
             DrawGraph();
 
@@ -57,7 +52,7 @@ namespace BusinessAlgorithm.Test {
         // 判断起始点和目标点的距离是否在指定范围内（包含目标体积）
         public void CheckTargetInRange() {
             Clear();
-            var result = RangeSearch2D.CheckTargetInRangeWithBodySize(drawGraphArgs.pos, target.pos, target.radius, drawGraphArgs.radius);
+            var result = RangeSearch3D.CheckTargetInRangeWithBodySize(drawGraphArgs.pos, target.pos, target.radius, drawGraphArgs.radius);
 
             DrawGraph();
 
@@ -67,7 +62,7 @@ namespace BusinessAlgorithm.Test {
         // 判断目标点是否处于指定角度的扇形范围内（包含目标点体积）
         public void CheckInSectorRangeOfDirectionWithBodySize() {
             Clear();
-            var result = RangeSearch2D.CheckInSectorRangeOfDirectionWithBodySize(drawGraphArgs.pos, target.pos, target.radius, drawGraphArgs.radius, drawGraphArgs.angle, drawGraphArgs.direction);
+            var result = RangeSearch3D.CheckInSectorRangeOfDirectionWithBodySize(drawGraphArgs.pos, target.pos, target.radius, drawGraphArgs.radius, drawGraphArgs.angle, drawGraphArgs.direction);
 
             DrawGraph();
 
@@ -77,7 +72,7 @@ namespace BusinessAlgorithm.Test {
         // 判断目标点是否处于指定角度的扇形范围内
         public void CheckInSectorRangeOfDirection() {
             Clear();
-            var result = RangeSearch2D.CheckInSectorRangeOfDirection(drawGraphArgs.pos, target.pos, drawGraphArgs.radius, drawGraphArgs.angle, drawGraphArgs.direction);
+            var result = RangeSearch3D.CheckInSectorRangeOfDirection(drawGraphArgs.pos, target.pos, drawGraphArgs.radius, drawGraphArgs.angle, drawGraphArgs.direction);
 
             DrawGraph();
 
@@ -87,7 +82,7 @@ namespace BusinessAlgorithm.Test {
         // 判断目标点是否在矩形范围内（包含目标体积）
         public void CheckTargetInRectangleWithBodySize() {
             Clear();
-            var result = RangeSearch2D.CheckTargetInRectangleWithBodySize(drawGraphArgs.pos, target.pos, target.radius, drawGraphArgs.direction, drawGraphArgs.length, drawGraphArgs.width, drawGraphArgs.centerRangType);
+            var result = RangeSearch3D.CheckTargetInRectangleWithBodySize(drawGraphArgs.pos, target.pos, target.radius, drawGraphArgs.direction, drawGraphArgs.length, drawGraphArgs.width, drawGraphArgs.centerRangType);
 
             DrawGraph();
 
@@ -97,7 +92,7 @@ namespace BusinessAlgorithm.Test {
         // 判断目标点是否在矩形范围内
         public void CheckTargetInRectangle() {
             Clear();
-            var result = RangeSearch2D.CheckTargetInRectangle(drawGraphArgs.pos, target.pos, drawGraphArgs.direction, drawGraphArgs.length, drawGraphArgs.width, drawGraphArgs.centerRangType);
+            var result = RangeSearch3D.CheckTargetInRectangle(drawGraphArgs.pos, target.pos, drawGraphArgs.direction, drawGraphArgs.length, drawGraphArgs.width, drawGraphArgs.centerRangType);
 
             DrawGraph();
 
@@ -116,7 +111,7 @@ namespace BusinessAlgorithm.Test {
             DrawGraphBase casterDrawGraph = CreateDrawGraph(args);
         }
 
-        void DrawGraphToActor(Actor2D actor) {
+        void DrawGraphToActor(Actor actor) {
             DrawGraphArgs args = new DrawGraphArgs() {
                 pos = actor.pos,
                 radius = actor.radius,
@@ -144,7 +139,7 @@ namespace BusinessAlgorithm.Test {
             }
 
             drawGraph.InitArgs(args);
-            drawGraph.Draw2D();
+            drawGraph.Draw3D();
             return drawGraph;
         }
     }

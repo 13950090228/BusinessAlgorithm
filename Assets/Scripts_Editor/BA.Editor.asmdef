@@ -1,9 +1,11 @@
 {
-    "name": "Test",
+    "name": "BA.Editor",
     "rootNamespace": "",
     "references": [
         "GUID:fb8e1e2e5c128b840ab3c225d485e984",
-        "GUID:0cb0f14d7bba427469bc1271c9eaa299"
+        "GUID:0cb0f14d7bba427469bc1271c9eaa299",
+        "GUID:cb1396a0d5340e54fbf063284646eb59",
+        "GUID:eb82abdb1224e7548a31f360c1f09bf6"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

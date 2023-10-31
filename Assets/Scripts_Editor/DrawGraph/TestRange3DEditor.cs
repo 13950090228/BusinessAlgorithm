@@ -2,15 +2,14 @@ using UnityEngine;
 using UnityEditor;
 using BusinessAlgorithm.DrawGraph;
 using BusinessAlgorithm.Test;
-
 namespace BusinessAlgorithm.BAEditor {
 
-    [CustomEditor(typeof(TestRange2D), true)]
-    public class TestRange2DEditor : Editor {
+    [CustomEditor(typeof(TestRangeSearch3D), true)]
+    public class TestRangeSearch3DEditor : Editor {
         public override void OnInspectorGUI() {
             base.OnInspectorGUI();
 
-            TestRange2D script = (TestRange2D)target;
+            TestRangeSearch3D script = (TestRangeSearch3D)target;
 
             // 指定按钮的宽度、高度、间隔
             float buttonWidth = 300f;
@@ -34,8 +33,6 @@ namespace BusinessAlgorithm.BAEditor {
             GUILayout.EndHorizontal();
 
             GUILayout.BeginVertical();
-
-            GUILayout.Space(buttonSpacing);
 
             GUILayout.Space(buttonSpacing);
 
@@ -83,4 +80,5 @@ namespace BusinessAlgorithm.BAEditor {
 
         }
     }
+
 }
