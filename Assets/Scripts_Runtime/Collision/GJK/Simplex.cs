@@ -2,66 +2,61 @@ using UnityEngine;
 using System;
 
 namespace BusinessAlgorithm.Collision {
+    /// <summary>
+    /// 二阶单纯型
+    /// </summary>
     public class Simplex {
-        public Vector2 direction;
-        public int indexA;
-        public int indexB;
+        public Vector2 direction { get; private set; }
+        public Vector2 A { get; private set; }
+        public Vector2 B { get; private set; }
+        public Vector2 C { get; private set; }
+        int a;
+        int b;
+        int c;
 
-        private Vector2[] points = new Vector2[3];
-        private int count = 0;
+        public void SetDirection(Vector2 dir) {
+            this.direction = dir;
+        }
 
-        public void AddSupportPoint(Vector2 support, Vector2 pointA, Vector2 pointB) {
-            points[count] = support;
-            indexA = count;
-            indexB = count;
+        public void SetPointA(Vector2 point) {
+            this.A = point;
+            a = 1;
+        }
 
-            for (int i = 0; i < count; i++) {
-                if (Vector2.Dot(support - points[i], support) > 0) {
-                    indexA = count;
-                    indexB = i;
-                    direction = TripleCross(points[i] - support, support, support);
-                    break;
-                }
+        public void SetPointB(Vector2 point) {
+            this.B = point;
+            b = 1;
+        }
+
+        public void SetPointC(Vector2 point) {
+            this.C = point;
+            c = 1;
+        }
+
+        public void AddPoint(Vector2 supportPoint) {
+            if (a == 0) {
+                SetPointA(supportPoint);
+            } else if (b == 0) {
+                SetPointB(supportPoint);
+            } else {
+                SetPointC(supportPoint);
             }
-
-            count++;
         }
 
-        public bool ContainsOrigin(ref Vector2 newDirection) {
-            Vector2 a = points[indexA];
-            Vector2 b = points[indexB];
-            Vector2 ao = -a;
-            Vector2 ab = b - a;
-
-            if (count == 3) {
-                Vector2 c = points[3 - indexA - indexB];
-                Vector2 ac = c - a;
-                Vector2 bc = c - b;
-                Vector2 tripleCross = TripleCross(ab, ac, ao);
-
-                if (Vector2.Dot(tripleCross, bc) > 0) {
-                    indexA = indexB;
-                    indexB = 3 - indexA - indexB;
-                    direction = tripleCross;
-                    return false;
-                }
-            }
-
-            direction = DoubleCross(ab, ao);
-
-            return Vector2.Dot(direction, ao) <= 0;
+        public void RemovePointA() {
+            a = 0; ;
         }
 
-        private Vector2 TripleCross(Vector2 a, Vector2 b, Vector2 c) {
-            return Cross(Cross(a, b), c);
+        public void RemovePointB() {
+            b = 0; ;
         }
 
-        private Vector2 DoubleCross(Vector2 a, Vector2 b) {
-            return Cross(Cross(a, b), a);
+        public void RemovePointC() {
+            c = 0; ;
         }
 
-        private Vector2 Cross(Vector2 a, Vector2 b) {
-            return new Vector2(0, a.x * b.y - a.y * b.x);
+        public int GetLength() {
+            return a + b + c;
         }
     }
 }
