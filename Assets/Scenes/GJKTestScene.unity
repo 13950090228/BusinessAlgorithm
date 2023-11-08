@@ -268,14 +268,20 @@ MonoBehaviour:
     - {x: 0, y: 0}
     - {x: 2, y: 0}
     - {x: 1, y: 2}
+    - {x: -0.5, y: 2}
     isSearchOther: 1
   - sign: B
     color: {r: 0.4743359, g: 1, b: 0, a: 1}
     points:
-    - {x: 1, y: -1}
-    - {x: 3, y: -1}
-    - {x: 2, y: -1}
+    - {x: 1, y: -0.5}
+    - {x: 3, y: 0}
+    - {x: 2, y: -2}
+    - {x: 0, y: -2}
     isSearchOther: 1
+  simplexs:
+  - {x: 2, y: 2}
+  - {x: -3, y: 0}
+  - {x: -1, y: 4}
 --- !u!1 &1891981588
 GameObject:
   m_ObjectHideFlags: 0
